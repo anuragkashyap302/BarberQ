@@ -1,0 +1,28 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap');
+
+@layer base {
+  :root {
+    --color-primary: #e71c96;
+    --text-color-primary: #ffffff;
+  }
+}
+
+*{
+  font-family: Outfit;
+}
+
+@layer base {
+  body {
+    @apply bg-gradient-to-b from-[#0f172a] via-[#1e1b4b] to-[#2c1b1b] text-white;
+  }
+}
+
+.active hr{
+  @apply block
+}
+ /* @media (max-width: 640px) {
+  .active p{
+    @apply text-black 
+  }
+ } */
