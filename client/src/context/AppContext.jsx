@@ -28,9 +28,9 @@ const [userData , setUserData] = useState(false)
    }
   }
 
-  const userProfileData = async()=>{
+  const userProfileData = async(userToken)=>{
     try {
-      const {data} = await axios.get(backendURL + '/api/user/get-profile' , {headers:{token}})
+      const {data} = await axios.get(backendURL + '/api/user/get-profile' , {headers:{token: userToken}})
     if(data.success){
       setUserData(data.userData)
     } else{
@@ -50,7 +50,7 @@ const [userData , setUserData] = useState(false)
 
     useEffect(()=>{
     if(token){
-      userProfileData()
+      userProfileData(token)
     } else{
          setUserData(false)
     }

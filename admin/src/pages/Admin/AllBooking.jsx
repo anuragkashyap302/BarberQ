@@ -8,7 +8,7 @@ const AllBooking = () => {
 
   useEffect(() => {
     if (aToken) {
-      getAllBookings()
+      getAllBookings(aToken)
     }
   }, [aToken])
 

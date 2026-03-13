@@ -6,7 +6,7 @@ const BarberList = () => {
 
   useEffect(() => {
     if (aToken) {
-      getAllBarbers();
+      getAllBarbers(aToken);
     }
   }, [aToken]);
 
@@ -31,7 +31,7 @@ const BarberList = () => {
                 <input
                   type="checkbox"
                   checked={item.available}
-                  onChange={() => changeAvailability(item._id)}
+                  onChange={() => changeAvailability(item._id, aToken)}
                   className="w-5 h-5 accent-green-500"
                 />
                 <span className="text-sm">

@@ -31,15 +31,15 @@ const onSubmitHandler = async(e) =>{
           if(data.success){
            localStorage.setItem('bToken', data.token);
            setBToken(data.token);
-           console.log(data.token);
-           
             
         } else{
+            console.log('Barber login failed:', data.message);
             toast.error(data.message);
         }
       }
   } catch (error) {
-    
+    console.log('Login error:', error);
+    toast.error(error.message)
   }
 }
 

@@ -10,10 +10,10 @@ const AdminContextProvider = (props) => {
     const [bookings, setBookings] = useState([]);
     const [dashData, setDashData] = useState(false);
     const backendURL = import.meta.env.VITE_BACKEND_URL;
-     const getAllBarbers = async()=>{
+     const getAllBarbers = async(token)=>{
         try {
             // yha pe pagal ki tarh 1 ghata barbad kiye kiyki atoken ko object me bhejna padta hai aur hum aise hi bhej rahe teh fool
-            const {data} = await axios.post( backendURL + '/api/admin/all-barbers',{}, {headers:{aToken}})
+            const {data} = await axios.post( backendURL + '/api/admin/all-barbers',{}, {headers:{aToken: token}})
             if(data.success){
                 setBarbers(data.barbers)
                 console.log(data.barbers);
@@ -25,12 +25,12 @@ const AdminContextProvider = (props) => {
             toast.error(error.message)
         }
      }
-     const changeAvailability = async(barberId) =>{
+     const changeAvailability = async(barberId, token) =>{
         try {
-            const {data} = await axios.post( backendURL + '/api/admin/change-availability',{barberId}, {headers:{aToken}})
+            const {data} = await axios.post( backendURL + '/api/admin/change-availability',{barberId}, {headers:{aToken: token}})
             if(data.success){
                 toast.success(data.message)
-                getAllBarbers()
+                getAllBarbers(token)
             }
             else{
 
@@ -42,9 +42,9 @@ const AdminContextProvider = (props) => {
         }
         }
       
-      const getAllBookings = async()=>{
+      const getAllBookings = async(token)=>{
          try {
-            const {data} = await axios.get( backendURL + '/api/admin/all-bookings', {headers:{aToken}})
+            const {data} = await axios.get( backendURL + '/api/admin/all-bookings', {headers:{aToken: token}})
             if(data.success){
                 setBookings(data.bookings)
                 console.log(data.bookings);
@@ -57,12 +57,12 @@ const AdminContextProvider = (props) => {
          }
       }
       
-      const cancelBooking = async(bookingId)=>{
+      const cancelBooking = async(bookingId, token)=>{
         try {
-            const {data} = await axios.post( backendURL + '/api/admin/booking-cancel',{bookingId}, {headers:{aToken}})
+            const {data} = await axios.post( backendURL + '/api/admin/booking-cancel',{bookingId}, {headers:{aToken: token}})
             if(data.success){
                 toast.success(data.message)
-                getAllBookings()
+                getAllBookings(token)
             } else{
                 toast.error(data.message)
             }
@@ -71,9 +71,9 @@ const AdminContextProvider = (props) => {
         }
       }
 
-      const getDashData = async()=>{
+      const getDashData = async(token)=>{
          try {
-            const {data} = await axios.get( backendURL + '/api/admin/dashboard', {headers:{aToken}})
+            const {data} = await axios.get( backendURL + '/api/admin/dashboard', {headers:{aToken: token}})
             if(data.success){
                 setDashData(data.dashData)
                  console.log(data.dashData);

@@ -10,12 +10,12 @@ const BarberDashboard = () => {
 
   useEffect(() => {
     if (bToken) {
-      getDashData()
+      getDashData(bToken)
     }
   }, [bToken])
 
   return (
-    dashData && (
+    dashData ? (
       <div className="p-6 min-h-screen bg-gradient-to-b from-[#0f172a] via-[#1e1b4b] to-[#2c1b1b] text-white">
         {/* Top Stats Section */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
@@ -87,13 +87,13 @@ const BarberDashboard = () => {
                 ) : (
                   <div className="flex gap-3">
                     <button
-                      onClick={() => cancelBooking(item._id)}
+                      onClick={() => cancelBooking(item._id, bToken)}
                       className="p-2 rounded-full bg-red-500/20 hover:bg-red-500/40 transition"
                     >
                       <img src={assets.cancel_icon} alt="cancel" className="w-5" />
                     </button>
                     <button
-                      onClick={() => completeBooking(item._id)}
+                      onClick={() => completeBooking(item._id, bToken)}
                       className="p-2 rounded-full bg-green-500/20 hover:bg-green-500/40 transition"
                     >
                       <img src={assets.tick_icon} alt="confirm" className="w-5" />
@@ -104,6 +104,10 @@ const BarberDashboard = () => {
             ))}
           </div>
         </div>
+      </div>
+    ) : (
+      <div className="p-6 min-h-screen bg-gradient-to-b from-[#0f172a] via-[#1e1b4b] to-[#2c1b1b] text-white flex items-center justify-center">
+        <p className="text-xl">Loading dashboard...</p>
       </div>
     )
   )

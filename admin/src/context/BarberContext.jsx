@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createContext } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -11,9 +11,9 @@ const BarberContextProvider = (props) => {
     const [dashData , setDashData] = useState(false)
     const [profileData , setProfileData] = useState(false)
 
-    const getBookings = async() => {
+    const getBookings = async(token) => {
          try {
-            const {data}  = await axios.get(backendURL + '/api/barber/bookings',{headers:{bToken} })
+            const {data}  = await axios.get(backendURL + '/api/barber/bookings',{headers:{bToken: token} })
             if(data.success){
                 setBookings(data.bookings.reverse())
                 console.log(data.bookings);
@@ -27,12 +27,12 @@ const BarberContextProvider = (props) => {
          }
     }
      
-    const completeBooking = async(bookingId) => {
+    const completeBooking = async(bookingId, token) => {
          try {
-            const {data}  = await axios.post(backendURL + '/api/barber/complete-booking',{ bookingId},{headers:{bToken} })
+            const {data}  = await axios.post(backendURL + '/api/barber/complete-booking',{ bookingId},{headers:{bToken: token} })
             if(data.success){
                 toast.success(data.message)
-                getBookings()
+                getBookings(token)
             }else{
                 toast.error(data.message)
             }
@@ -41,12 +41,12 @@ const BarberContextProvider = (props) => {
             toast.error(error.message)
          }
     }
-     const cancelBooking = async(bookingId) => {
+     const cancelBooking = async(bookingId, token) => {
          try {
-            const {data}  = await axios.post(backendURL + '/api/barber/cancel-booking',{ bookingId},{headers:{bToken} })
+            const {data}  = await axios.post(backendURL + '/api/barber/cancel-booking',{ bookingId},{headers:{bToken: token} })
             if(data.success){
                 toast.success(data.message)
-                getBookings()
+                getBookings(token)
             }else{
                 toast.error(data.message)
             }
@@ -56,9 +56,9 @@ const BarberContextProvider = (props) => {
          }
     }
 
-    const getDashData = async() => {
+    const getDashData = async(token) => {
         try {
-            const {data}  = await axios.get(backendURL + '/api/barber/dashboard',{headers:{bToken} })
+            const {data}  = await axios.get(backendURL + '/api/barber/dashboard',{headers:{bToken: token} })
             if(data.success){
                 setDashData(data.dashData)
                 console.log(data.dashData);
@@ -73,9 +73,9 @@ const BarberContextProvider = (props) => {
         }
     }
 
-    const getProfileData = async() => {
+    const getProfileData = async(token) => {
         try {
-            const {data}  = await axios.get(backendURL + '/api/barber/profile',{headers:{bToken} })
+            const {data}  = await axios.get(backendURL + '/api/barber/profile',{headers:{bToken: token} })
             if(data.success){
                  setProfileData(data.profileData)   // ✅ use correct key kyki backent se profileData name hi bhej rahe hai to yaha bhi same use karna hia nahi to error
                console.log(data.profileData); 

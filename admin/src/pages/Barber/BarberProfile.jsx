@@ -44,7 +44,7 @@ const BarberProfile = () => {
 };
 
    useEffect(() => {
-    if (bToken) getProfileData();
+    if (bToken) getProfileData(bToken);
   }, [bToken]);
 
   return (
