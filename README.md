@@ -52,7 +52,7 @@ BarberQ is a full-stack MERN-style application with separate frontends for custo
 
 1. **Clone the repository**
    ```bash
-   git clone <repo-url>
+   git clone <[repo-url](https://github.com/anuragkashyap302/BarberQ)>
    cd BarberQ
    ```
 
