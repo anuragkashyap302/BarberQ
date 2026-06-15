@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createContext } from "react";
 import axios from "axios";
 export const AdminContext  = createContext()
@@ -10,6 +10,23 @@ const AdminContextProvider = (props) => {
     const [bookings, setBookings] = useState([]);
     const [dashData, setDashData] = useState(false);
     const backendURL = import.meta.env.VITE_BACKEND_URL;
+    // validate token on load to avoid stale/invalid token flashes
+    useEffect(()=>{
+        const validate = async ()=>{
+            try{
+                if(!aToken) return;
+                const {data} = await axios.get( backendURL + '/api/admin/dashboard', {headers:{aToken}})
+                if(!data.success){
+                    localStorage.removeItem('aToken')
+                    setAToken('')
+                }
+            }catch(err){
+                localStorage.removeItem('aToken')
+                setAToken('')
+            }
+        }
+        validate()
+    }, [aToken])
      const getAllBarbers = async(token)=>{
         try {
             // yha pe pagal ki tarh 1 ghata barbad kiye kiyki atoken ko object me bhejna padta hai aur hum aise hi bhej rahe teh fool

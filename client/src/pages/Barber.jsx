@@ -1,6 +1,6 @@
 // Barber.jsx
 import React, { useContext, useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
 
 // Sidebar main categories (only 3 + All)
@@ -8,24 +8,30 @@ const mainCategories = ["All", "Haircut & Styling", "Beard Grooming", "Facial & 
 
 const Barber = () => {
   const { speciality } = useParams();
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { barbers } = useContext(AppContext);
 
   const [selectedSpeciality, setSelectedSpeciality] = useState(
-    speciality ? decodeURIComponent(speciality) : "All"
+    speciality ? decodeURIComponent(speciality) : searchParams.get("service") || "All"
   );
+  const searchCity = searchParams.get("city") || "";
 
-  // ✅ Update state when URL param changes
+  // ✅ Update state when URL params change
   useEffect(() => {
-    setSelectedSpeciality(speciality ? decodeURIComponent(speciality) : "All");
-  }, [speciality]);
+    if (searchParams.get("service")) {
+      setSelectedSpeciality(searchParams.get("service"));
+    } else {
+      setSelectedSpeciality(speciality ? decodeURIComponent(speciality) : "All");
+    }
+  }, [speciality, searchParams]);
 
-  // ✅ Filter directly by barbers' speciality
-// ✅ Filter directly by barber.services
-const filteredBarbers =
-  selectedSpeciality === "All"
-    ? barbers
-    : barbers.filter((barber) => barber.services === selectedSpeciality);
+  // ✅ Filter by both city and speciality
+  const filteredBarbers = barbers.filter((barber) => {
+    const matchesCity = !searchCity || barber.address?.line2?.toLowerCase().includes(searchCity.toLowerCase());
+    const matchesService = selectedSpeciality === "All" || barber.services === selectedSpeciality;
+    return matchesCity && matchesService;
+  });
 
 
   // ✅ Sidebar click handler
@@ -42,8 +48,8 @@ const filteredBarbers =
       <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
         {/* Sidebar */}
         <div className="space-y-3">
-          <h3 className="text-lg font-semibold text-gray-200">
-            Browse through the barber's speciality
+          <h3 className="text-lg font-semibold text-gray-200 mb-3">
+            Browse Speciality
           </h3>
           {mainCategories.map((cat, idx) => (
             <button

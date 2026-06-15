@@ -10,7 +10,7 @@ const authUser = async (req, res, next) => {
       });
     }
 
-    const token_decode = jwt.verify(token, secret);
+    const token_decode = jwt.verify(token, process.env.JWT_SECRET);
     req.userId = token_decode.id; // ✅ store on req, not req.body agar yaha body use kiya to sab jav=gah body hi use karna hai
     next();
   } catch (error) {
