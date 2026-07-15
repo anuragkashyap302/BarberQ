@@ -28,7 +28,8 @@ const addBarber = async (req, res) => {
             const hashedPassword = await bcrypt.hash(password, salt);
 
             // upload image to cloudinary
-            const imageUpload = await cloudinary.uploader.upload(imagefile.path, {
+            const imageBase64 = `data:${imagefile.mimetype};base64,${imagefile.buffer.toString('base64')}`;
+            const imageUpload = await cloudinary.uploader.upload(imageBase64, {
                 resource_type: 'image'
                 });
                 const imageUrl = imageUpload.secure_url;
