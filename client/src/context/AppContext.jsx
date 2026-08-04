@@ -31,14 +31,17 @@ const [userData , setUserData] = useState(false)
   const userProfileData = async(userToken)=>{
     try {
       const {data} = await axios.get(backendURL + '/api/user/get-profile' , {headers:{token: userToken}})
-    if(data.success){
-      setUserData(data.userData)
-    } else{
-       toast.error(data.message)
-    }
+      if(data.success){
+        setUserData(data.userData)
+      } else{
+        toast.error(data.message)
+         // If the token is invalid or unauthorized, clear it so the user can log in/sign up again
+        setToken(false)
+        localStorage.removeItem('token')
+      }
     } catch (error) {
       console.log("Error while fetching User data", error);
-        toast.error(error.message);
+      toast.error(error.message);
     }
   }
     const value = {
