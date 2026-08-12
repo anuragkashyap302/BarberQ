@@ -19,6 +19,7 @@ const allowedOrigins = [
   'http://localhost:5174',      // Admin local
   'https://barber-q-lemon.vercel.app',  // Client production
   'https://barberadmin.vercel.app',     // Admin production
+   'https://barberq.anuragkr.me' // domain name purchased 
 ];
 
 app.use(cors({
