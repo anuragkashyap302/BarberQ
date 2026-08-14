@@ -8,7 +8,7 @@
   }
 }
 
-*{
+* {
   font-family: Outfit;
 }
 
@@ -17,4 +17,3 @@
     @apply bg-gradient-to-b from-[#0f172a] via-[#1e1b4b] to-[#2c1b1b] text-white;
   }
 }
-

@@ -104,7 +104,7 @@ const Login = () => {
         {/* Button */}
         <button
           type="submit"
-          className="w-full py-3 rounded-lg bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 transition font-semibold text-lg shadow-lg cursor-pointer"
+          className="w-full py-3 rounded-lg bg-pink-500 hover:bg-pink-600 transition font-semibold text-lg shadow-lg cursor-pointer"
         >
           {state === "Sign Up" ? "Create Account" : "Login"}
         </button>

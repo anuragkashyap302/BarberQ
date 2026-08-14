@@ -8,7 +8,7 @@
   }
 }
 
-*{
+* {
   font-family: Outfit;
 }
 
@@ -18,10 +18,11 @@
   }
 }
 
-.active hr{
+.active hr {
   @apply block
 }
- /* @media (max-width: 640px) {
+
+/* @media (max-width: 640px) {
   .active p{
     @apply text-black 
   }

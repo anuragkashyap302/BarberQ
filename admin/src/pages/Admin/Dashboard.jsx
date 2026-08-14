@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from 'react'
 import { AdminContext } from '../../context/AdminContext'
 import { AppContext } from '../../context/AppContext'
-import { assets } from '../../assets/assets'
+import { Scissors, Calendar, Users, IndianRupee, ClipboardList, XCircle } from 'lucide-react'
 
 const Dashboard = () => {
   const { aToken, dashData, getDashData, cancelBooking } = useContext(AdminContext)
@@ -20,7 +20,9 @@ const Dashboard = () => {
         <div className="grid grid-cols-1 sm:grid-cols-4 gap-6">
           {/* Barbers */}
           <div className="flex items-center gap-4 bg-white/10 backdrop-blur-md rounded-2xl p-6 shadow-lg hover:bg-white/20 transition">
-            <img src={assets.barber_icon} alt="barbers" className="w-12 h-12" />
+            <div className="p-3.5 rounded-xl bg-pink-500/20 text-pink-400 border border-pink-500/10">
+              <Scissors size={28} />
+            </div>
             <div>
               <p className="text-2xl font-bold">{dashData.barbers}</p>
               <p className="text-sm text-gray-300">Barbers</p>
@@ -29,36 +31,43 @@ const Dashboard = () => {
 
           {/* Bookings */}
           <div className="flex items-center gap-4 bg-white/10 backdrop-blur-md rounded-2xl p-6 shadow-lg hover:bg-white/20 transition">
-            <img src={assets.booking_icon} alt="bookings" className="w-12 h-12" />
+            <div className="p-3.5 rounded-xl bg-pink-500/20 text-pink-400 border border-pink-500/10">
+              <Calendar size={28} />
+            </div>
             <div>
               <p className="text-2xl font-bold">{dashData.bookings}</p>
               <p className="text-sm text-gray-300">Bookings</p>
             </div>
           </div>
-          
 
           {/* Customers */}
           <div className="flex items-center gap-4 bg-white/10 backdrop-blur-md rounded-2xl p-6 shadow-lg hover:bg-white/20 transition">
-            <img src={assets.customer_icon} alt="customers" className="w-12 h-12" />
+            <div className="p-3.5 rounded-xl bg-pink-500/20 text-pink-400 border border-pink-500/10">
+              <Users size={28} />
+            </div>
             <div>
               <p className="text-2xl font-bold">{dashData.customer}</p>
               <p className="text-sm text-gray-300">Customers</p>
             </div>
           </div>
-          {/* total earning */}
+
+          {/* Total Revenue */}
           <div className="flex items-center gap-4 bg-white/10 backdrop-blur-md rounded-2xl p-6 shadow-lg hover:bg-white/20 transition">
-            <img src={assets.investment_icon} alt="customers" className="w-12 h-12" />
+            <div className="p-3.5 rounded-xl bg-pink-500/20 text-pink-400 border border-pink-500/10">
+              <IndianRupee size={28} />
+            </div>
             <div>
               <p className="text-2xl font-bold">₹{dashData.earning}</p>
-              <p className="text-sm text-gray-300">TotalRevenue</p>
+              <p className="text-sm text-gray-300">Total Revenue</p>
             </div>
           </div>
         </div>  
+
         {/* Latest Bookings */}
         <div className="bg-white/10 backdrop-blur-md rounded-2xl shadow-lg p-6">
           <div className="flex items-center gap-3 mb-6 border-b border-white/10 pb-3">
-            <img src={assets.list_icon} alt="latest" className="w-6 h-6" />
-            <p className="text-lg font-semibold">Latest Bookings</p>
+            <ClipboardList size={22} className="text-pink-400" />
+            <p className="text-lg font-semibold">Latest <span className="text-pink-500">Bookings</span></p>
           </div>
 
           <div className="space-y-4">
@@ -82,23 +91,16 @@ const Dashboard = () => {
 
                 {/* Action */}
                 {item.cancelled ? (
-                  <span className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-red-600 to-red-800 text-white font-medium text-xs shadow-md">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-4 w-4"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
+                  <span className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-red-500/10 text-red-400 border border-red-500/20 text-xs font-semibold">
+                    <XCircle size={14} />
                     Cancelled
                   </span>
                 ) : item.isCompleted ? <p className='text-green-500 text-xs font-medium'>Completed</p>: (
                   <button
                     onClick={() => cancelBooking(item._id, aToken)}
-                    className="px-4 py-2 rounded-lg bg-gradient-to-r from-red-500 to-red-700 text-white font-medium text-sm hover:from-red-600 hover:to-red-800 transition cursor-pointer shadow-md"
+                    className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-pink-500/10 hover:bg-pink-600 text-pink-400 hover:text-white border border-pink-500/20 hover:border-transparent transition-all duration-300 text-xs font-semibold shadow-sm cursor-pointer"
                   >
+                    <XCircle size={14} />
                     Cancel
                   </button>
                 )}

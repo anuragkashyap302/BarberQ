@@ -10,8 +10,8 @@ const Sidebar = () => {
 
   const linkClass = ({ isActive }) =>
     `flex items-center gap-3 px-4 py-2 rounded-xl transition-all duration-300 font-medium
-     ${isActive 
-        ? 'bg-gradient-to-r from-pink-500 to-purple-500 text-white shadow-lg shadow-purple-500/40' 
+      ${isActive 
+        ? 'bg-pink-500 text-white shadow-lg shadow-pink-500/30' 
         : 'text-gray-300 hover:bg-white/10 hover:text-pink-400'}`
 
   return (

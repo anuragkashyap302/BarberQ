@@ -16,20 +16,20 @@ import 'react-toastify/dist/ReactToastify.css'; // <-- No indentation here
 const App = () => {
   return (
     <div>
-      <ToastContainer/>
-      <Navbar/>
+      <ToastContainer />
+      <Navbar />
       <Routes>
-        <Route path='/' element = {<Home/>}/>
-        <Route path='/barbers' element = {<Barber/>}/>
-        <Route path='/barbers/:speciality' element = {<Barber/>}/>
-        <Route path='/login' element = {<Login/>}/>
-        <Route path='/about' element = {<About/>}/>
-        <Route path='/contact' element = {<Contact/>}/>
-        <Route path='/my-profile' element = {<MyProfile/>}/>
-        <Route path='/my-bookings' element = {<MyBooking/>}/>
-        <Route path='/booking/:barberId' element = {<Booking/>}/>
+        <Route path='/' element={<Home />} />
+        <Route path='/barbers' element={<Barber />} />
+        <Route path='/barbers/:speciality' element={<Barber />} />
+        <Route path='/login' element={<Login />} />
+        <Route path='/about' element={<About />} />
+        <Route path='/contact' element={<Contact />} />
+        <Route path='/my-profile' element={<MyProfile />} />
+        <Route path='/my-bookings' element={<MyBooking />} />
+        <Route path='/booking/:barberId' element={<Booking />} />
       </Routes>
-      <Footer/>
+      <Footer />
     </div>
   )
 }

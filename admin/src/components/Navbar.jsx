@@ -18,14 +18,14 @@ const Navbar = () => {
   }
 
   return (
-    <nav className="w-full bg-gradient-to-r from-pink-600 to-purple-700 px-6 py-3 flex items-center justify-between shadow-lg">
+    <nav className="w-full bg-[#0f172a]/60 backdrop-blur-lg border-b border-white/10 px-6 py-3.5 flex items-center justify-between shadow-lg sticky top-0 z-50">
       {/* Logo + Role */}
       <div className="flex items-center gap-3">
         {/* SVG Icon */}
-        <div className="flex items-center justify-center w-10 h-10 rounded-full bg-white shadow-md">
+        <div className="flex items-center justify-center w-10 h-10 rounded-full bg-pink-500/10 border border-pink-500/20 shadow-md">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-6 w-6 text-pink-600"
+            className="h-6 w-6 text-pink-500"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -41,11 +41,11 @@ const Navbar = () => {
 
         {/* Text Logo */}
         <h1 className="text-2xl font-bold text-white tracking-wide">
-          Barber<span className="text-yellow-300">Q</span>
+          Barber<span className="text-pink-500">Q</span>
         </h1>
 
         {/* Role Display */}
-        <p className="ml-4 px-3 py-1 text-sm rounded-full bg-white/20 text-white font-medium">
+        <p className="ml-4 px-3 py-0.5 text-xs rounded-full bg-pink-500/20 text-pink-300 border border-pink-500/30 font-semibold tracking-wide">
           {aToken ? 'Admin' : 'Barber'}
         </p>
       </div>
@@ -53,7 +53,7 @@ const Navbar = () => {
       {/* Logout Button */}
       <button
         onClick={logout}
-        className="bg-white text-pink-600 font-semibold px-4 py-2 rounded-lg shadow-md hover:bg-pink-100 transition"
+        className="bg-pink-500 hover:bg-pink-600 text-white font-semibold text-sm px-5 py-2 rounded-xl shadow-lg hover:shadow-pink-500/20 transition-all duration-300 cursor-pointer"
       >
         Logout
       </button>

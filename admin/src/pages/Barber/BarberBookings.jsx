@@ -15,7 +15,7 @@ const BarberBookings = () => {
 
   return (
     <div className="p-6 min-h-screen bg-gradient-to-b from-[#0f172a] via-[#1e1b4b] to-[#2c1b1b] text-white">
-      <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center">📅 All Bookings</h2>
+      <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center text-white">All <span className="text-pink-500">Bookings</span></h2>
 
       {/* Desktop Table Header */}
       <div className="hidden md:grid grid-cols-7 gap-4 py-3 px-4 rounded-lg bg-white/10 backdrop-blur-md text-sm font-semibold uppercase tracking-wide">

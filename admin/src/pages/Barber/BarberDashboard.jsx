@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from 'react'
 import { BarberContext } from '../../context/BarberContext'
-import { assets } from '../../assets/assets'
 import { AppContext } from '../../context/AppContext'
+import { IndianRupee, Calendar, Users, ClipboardList, X, Check } from 'lucide-react'
 
 const BarberDashboard = () => {
   const { slotDateFormat } = useContext(AppContext)
@@ -21,7 +21,9 @@ const BarberDashboard = () => {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
           {/* Earnings */}
           <div className="flex items-center gap-4 bg-white/10 backdrop-blur-lg rounded-2xl p-6 shadow-lg hover:scale-[1.02] transition-transform">
-            <img src={assets.earning_icon} alt="earnings" className="w-12 h-12" />
+            <div className="p-3.5 rounded-xl bg-pink-500/20 text-pink-400 border border-pink-500/10">
+              <IndianRupee size={28} />
+            </div>
             <div>
               <p className="text-3xl font-extrabold">₹{dashData.earnings}</p>
               <p className="text-sm text-gray-300">Earnings</p>
@@ -30,7 +32,9 @@ const BarberDashboard = () => {
 
           {/* Bookings */}
           <div className="flex items-center gap-4 bg-white/10 backdrop-blur-lg rounded-2xl p-6 shadow-lg hover:scale-[1.02] transition-transform">
-            <img src={assets.appointments_icon} alt="bookings" className="w-12 h-12" />
+            <div className="p-3.5 rounded-xl bg-pink-500/20 text-pink-400 border border-pink-500/10">
+              <Calendar size={28} />
+            </div>
             <div>
               <p className="text-3xl font-extrabold">{dashData.totalBookings}</p>
               <p className="text-sm text-gray-300">Bookings</p>
@@ -39,7 +43,9 @@ const BarberDashboard = () => {
 
           {/* Customers */}
           <div className="flex items-center gap-4 bg-white/10 backdrop-blur-lg rounded-2xl p-6 shadow-lg hover:scale-[1.02] transition-transform">
-            <img src={assets.patients_icon} alt="customers" className="w-12 h-12" />
+            <div className="p-3.5 rounded-xl bg-pink-500/20 text-pink-400 border border-pink-500/10">
+              <Users size={28} />
+            </div>
             <div>
               <p className="text-3xl font-extrabold">{dashData.customers}</p>
               <p className="text-sm text-gray-300">Customers</p>
@@ -50,8 +56,8 @@ const BarberDashboard = () => {
         {/* Latest Bookings Section */}
         <div className="bg-white/10 backdrop-blur-lg rounded-2xl shadow-lg p-6">
           <div className="flex items-center gap-3 mb-6 border-b border-white/10 pb-3">
-            <img src={assets.list_icon} alt="latest" className="w-6 h-6" />
-            <p className="text-lg font-semibold">Latest Bookings</p>
+            <ClipboardList size={22} className="text-pink-400" />
+            <p className="text-lg font-semibold">Latest <span className="text-pink-500">Bookings</span></p>
           </div>
 
           <div className="space-y-4">
@@ -88,15 +94,15 @@ const BarberDashboard = () => {
                   <div className="flex gap-3">
                     <button
                       onClick={() => cancelBooking(item._id, bToken)}
-                      className="p-2 rounded-full bg-red-500/20 hover:bg-red-500/40 transition"
+                      className="p-2 rounded-full bg-red-500/20 hover:bg-red-500/40 text-red-400 transition"
                     >
-                      <img src={assets.cancel_icon} alt="cancel" className="w-5" />
+                      <X size={18} />
                     </button>
                     <button
                       onClick={() => completeBooking(item._id, bToken)}
-                      className="p-2 rounded-full bg-green-500/20 hover:bg-green-500/40 transition"
+                      className="p-2 rounded-full bg-green-500/20 hover:bg-green-500/40 text-green-400 transition"
                     >
-                      <img src={assets.tick_icon} alt="confirm" className="w-5" />
+                      <Check size={18} />
                     </button>
                   </div>
                 )}

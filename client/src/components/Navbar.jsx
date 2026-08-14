@@ -1,10 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
 import { assets } from "../assets/assets";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
-import {LucideSearch} from  "lucide-react"
+import { LucideSearch } from "lucide-react"
 const Navbar = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
@@ -31,21 +32,21 @@ const Navbar = () => {
     setSearchCity("");
     setSearchService("All");
   };
- useEffect(() => {
-        if(location.pathname !== '/') {
-            setIsScrolled(true);
-            return;
-        }else {
-            setIsScrolled(false);
-        }
+  useEffect(() => {
+    if (location.pathname !== '/') {
+      setIsScrolled(true);
+      return;
+    } else {
+      setIsScrolled(false);
+    }
 
-        setIsScrolled(prev => location.pathname !== '/' ? true : prev   );
-        const handleScroll = () => {
-            setIsScrolled(window.scrollY > 10);
-        };
-        window.addEventListener("scroll", handleScroll);
-        return () => window.removeEventListener("scroll", handleScroll);
-    }, [location.pathname]);
+    setIsScrolled(prev => location.pathname !== '/' ? true : prev);
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [location.pathname]);
   // Reusable link styling
   const navLinkStyle = ({ isActive }) =>
     `relative py-1 transition-all duration-300 
@@ -102,9 +103,9 @@ const Navbar = () => {
         <div className="relative group">
           <button
             onClick={() => setShowSearch(!showSearch)}
-            className="bg-gradient-to-r from-pink-500 to-yellow-400 text-black px-4 py-2 rounded-full font-medium shadow-md hover:scale-105 transition-transform flex items-center gap-2"
+            className="bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded-full font-medium shadow-md hover:scale-105 transition-transform flex items-center gap-2"
           >
-            <LucideSearch/> Search
+            <LucideSearch /> Search
           </button>
           {showSearch && (
             <div className="absolute top-full right-0 mt-2 w-80 bg-gradient-to-b from-gray-900 to-black border-2 border-pink-500 rounded-lg p-4 shadow-2xl z-40">
@@ -130,7 +131,7 @@ const Navbar = () => {
               <div className="flex gap-2 mb-3">
                 <button
                   onClick={handleSearch}
-                  className="flex-1 bg-gradient-to-r from-pink-600 to-pink-500 text-white px-3 py-2 rounded-lg hover:from-pink-700 hover:to-pink-600 transition font-medium text-sm"
+                  className="flex-1 bg-pink-500 text-white px-3 py-2 rounded-lg hover:from-pink-700 hover:to-pink-600 transition font-medium text-sm"
                 >
                   Search
                 </button>
@@ -164,12 +165,20 @@ const Navbar = () => {
             </div>
           )}
         </div>
+
       </div>
 
       {/* Profile / Login Button - Desktop Only */}
-      <div className="hidden md:flex items-center gap-4">
+      <div className="hidden md:flex items-center gap-6">
+        {/* Admin Redirect Button */}
+        <button
+          onClick={() => window.location.href = import.meta.env.VITE_ADMIN_URL || 'http://localhost:5174'}
+          className="border border-white/20 hover:border-pink-500 bg-white/10 hover:bg-pink-500/20 text-gray-200 hover:text-white px-4 py-1.5 rounded-full text-sm font-semibold transition-all duration-300 hover:scale-105 cursor-pointer shadow-md mr-4"
+        >
+          Admin
+        </button>
         {token && userData ? (
-          <div className="flex items-center gap-2 cursor-pointer group relative">
+          <div className="flex items-center gap-3 cursor-pointer group relative">
             <img
               className="w-9 h-9 rounded-full ring-2 ring-pink-400"
               src={userData.image}
@@ -202,14 +211,14 @@ const Navbar = () => {
               </div>
             </div>
           </div>
-        ) : (
+        ) : location.pathname !== "/login" ? (
           <button
             onClick={() => navigate("/login")}
-            className="bg-gradient-to-r from-pink-500 to-yellow-400 text-black px-6 py-2 rounded-full font-medium shadow-md hover:scale-105 transition-transform cursor-pointer"
+            className="bg-pink-500 hover:bg-pink-600 text-white px-6 py-2 rounded-full font-medium shadow-md hover:scale-105 transition-transform cursor-pointer"
           >
             Create account
           </button>
-        )}
+        ) : null}
       </div>
 
       {/* Mobile Hamburger Icon + Search */}
@@ -219,7 +228,7 @@ const Navbar = () => {
           onClick={() => setShowSearch(!showSearch)}
           className="text-white text-2xl hover:text-pink-400 transition"
         >
-          <LucideSearch/>
+          <LucideSearch />
         </button>
         <img
           onClick={() => setShowMenu(true)}
@@ -284,7 +293,7 @@ const Navbar = () => {
                 handleSearch();
                 setShowMenu(false);
               }}
-              className="w-full bg-gradient-to-r from-pink-600 to-pink-500 text-white px-3 py-2 rounded-lg hover:from-pink-700 hover:to-pink-600 transition font-medium text-sm"
+              className="w-full bg-pink-500 hover:bg-pink-600 text-white px-3 py-2 rounded-lg transition font-medium text-sm"
             >
               Search
             </button>
@@ -300,10 +309,9 @@ const Navbar = () => {
                   to={path}
                   onClick={() => setShowMenu(false)}
                   className={({ isActive }) =>
-                    `py-3 px-4 rounded-lg transition-all duration-300 text-sm font-medium ${
-                      isActive
-                        ? "bg-gradient-to-r from-pink-600 to-pink-500 text-white shadow-lg"
-                        : "text-gray-300 bg-gray-800/50 hover:bg-gradient-to-r hover:from-pink-600/20 hover:to-pink-500/20 hover:text-white"
+                    `py-3 px-4 rounded-lg transition-all duration-300 text-sm font-medium ${isActive
+                      ? "bg-pink-500 text-white shadow-lg"
+                      : "text-gray-300 bg-gray-800/50 hover:bg-pink-500 hover:text-white"
                     }`
                   }
                 >
@@ -311,6 +319,14 @@ const Navbar = () => {
                 </NavLink>
               );
             })}
+
+            {/* Mobile Admin Redirect */}
+            <a
+              href={import.meta.env.VITE_ADMIN_URL || 'http://localhost:5174'}
+              className="py-3 px-4 rounded-lg transition-all duration-300 text-sm font-medium text-gray-300 bg-gray-800/50 hover:bg-pink-500 hover:text-white"
+            >
+              Admin Panel
+            </a>
           </ul>
         </div>
 
@@ -332,7 +348,7 @@ const Navbar = () => {
                   setShowMenu(false);
                   scrollTo(0, 0);
                 }}
-                className="w-full bg-gradient-to-r from-pink-600 to-pink-500 text-white px-3 py-2 rounded-lg font-medium hover:from-pink-700 hover:to-pink-600 transition text-sm"
+                className="w-full bg-pink-500 hover:bg-pink-600 text-white px-3 py-2 rounded-lg font-medium transition text-sm"
               >
                 My Profile
               </button>
@@ -356,17 +372,17 @@ const Navbar = () => {
                 Logout
               </button>
             </div>
-          ) : (
+          ) : location.pathname !== "/login" ? (
             <button
               onClick={() => {
                 navigate("/login");
                 setShowMenu(false);
               }}
-              className="w-full bg-gradient-to-r from-pink-600 to-pink-500 text-white px-4 py-2 rounded-lg font-medium hover:from-pink-700 hover:to-pink-600 transition cursor-pointer text-sm"
+              className="w-full bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded-lg font-medium transition cursor-pointer text-sm"
             >
               Create Account
             </button>
-          )}
+          ) : null}
         </div>
       </div>
     </div>

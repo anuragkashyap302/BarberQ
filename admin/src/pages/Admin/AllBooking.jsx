@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from 'react'
 import { AdminContext } from '../../context/AdminContext'
 import { AppContext } from '../../context/AppContext'
+import { XCircle } from 'lucide-react'
 
 const AllBooking = () => {
   const { aToken, bookings, getAllBookings,cancelBooking } = useContext(AdminContext)
@@ -14,7 +15,7 @@ const AllBooking = () => {
 
   return (
     <div className="p-6 text-white">
-      <h2 className="text-2xl font-bold mb-6 text-center">All Bookings</h2>
+      <h2 className="text-2xl font-bold mb-6 text-center text-white">All <span className="text-pink-500">Bookings</span></h2>
 
       <div className="overflow-x-auto">
         <div className="min-w-[800px]">
@@ -75,16 +76,15 @@ const AllBooking = () => {
 
                 {/* Actions */}
                {booking.cancelled ? (
-  <span className="flex items-center gap-2 px-3 py-1 rounded-full bg-red-500 text-white font-bold text-xs shadow-md">
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-    </svg>
+  <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-red-500/10 text-red-400 border border-red-500/20 text-xs font-semibold">
+    <XCircle size={14} />
     Cancelled
   </span>
 ) : booking.isCompleted ? <p className='text-green-500 text-xs font-medium'>Completed</p>: (
-  <button onClick={() => cancelBooking(booking._id)}
-    className="px-4 py-2 rounded-lg bg-gradient-to-r from-red-500 to-red-700 text-white font-medium text-sm hover:from-red-600 hover:to-red-800 transition cursor-pointer"
+  <button onClick={() => cancelBooking(booking._id, aToken)}
+    className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-pink-500/10 hover:bg-pink-600 text-pink-400 hover:text-white border border-pink-500/20 hover:border-transparent transition-all duration-300 text-xs font-semibold shadow-sm cursor-pointer"
   >
+    <XCircle size={14} />
     Cancel
   </button>
 )}

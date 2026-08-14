@@ -12,7 +12,7 @@ const BarberList = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#0f172a] via-[#1e1b4b] to-[#2c1b1b] text-white p-8">
-      <h1 className="text-3xl font-bold text-center mb-8">Our Barbers</h1>
+      <h1 className="text-3xl font-bold text-center mb-8 text-white">Our <span className="text-pink-500">Barbers</span></h1>
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {barbers.map((item, index) => (
           <div
