@@ -22,7 +22,7 @@ const Navbar = () => {
       {/* Logo + Role */}
       <div className="flex items-center gap-3">
         {/* SVG Icon */}
-        <div className="flex items-center justify-center w-10 h-10 rounded-full bg-pink-500/10 border border-pink-500/20 shadow-md">
+        <div className="flex items-center justify-center w-10 h-10 rounded-full bg-pink-500/10 border border-pink-500/20 shadow-md cursor-pointer hover:scale-110 transition-all duration-300" onClick={() => navigate('/')}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-6 w-6 text-pink-500"
@@ -40,7 +40,7 @@ const Navbar = () => {
         </div>
 
         {/* Text Logo */}
-        <h1 className="text-2xl font-bold text-white tracking-wide">
+        <h1 className="text-2xl font-bold text-white tracking-wide cursor-pointer hover:scale-110 transition-all duration-300" onClick={ () => navigate('/')}>
           Barber<span className="text-pink-500">Q</span>
         </h1>
 
