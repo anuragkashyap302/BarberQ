@@ -33,6 +33,11 @@ const Sidebar = () => {
             <p className='hidden md:block'>Add Barber</p>
           </NavLink>
 
+          <NavLink to="/add-service" className={linkClass}>
+            <img src={assets.add_icon} alt="" className="w-5 h-5 filter hue-rotate-60" />
+            <p className='hidden md:block'>Add Service</p>
+          </NavLink>
+
           <NavLink to="/barber-list" className={linkClass}>
             <img src={assets.people_icon} alt="" className="w-5 h-5" />
             <p className='hidden md:block'>Barber List</p>

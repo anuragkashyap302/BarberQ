@@ -7,6 +7,8 @@ const bookingSchema = new mongoose.Schema({
     slotTime: {type: String , required: true},
     userData : {type: Object , required: true},
     barberData: {type: Object , required: true},
+    serviceId: {type: String},
+    serviceName: {type: String},
     amount: {type: Number , required: true},
     date: {type: Number , required: true},
     cancelled: {type: Boolean , default: false},

@@ -3,6 +3,7 @@ import BarberModel from "../models/barbermodel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import bookingModel from "../models/bookingModel.js";
+import ServiceModel from "../models/serviceModel.js";
 const changeAvailability = async (req, res) => {
     try {
         const { barberId } = req.body;
@@ -18,7 +19,7 @@ const changeAvailability = async (req, res) => {
 
 const barberlist =  async (req , res)=>{
     try {
-        const barbers = await BarberModel.find({}).select(['-password' , '-email'])
+        const barbers = await BarberModel.find({}).select(['-password' , '-email']).populate('services')
         res.json({success: true , barbers})
     } catch (error) {
          res.json({ success: false, message: error.message });
@@ -141,7 +142,7 @@ const barberLogin = async (req, res) => {
  const barberProfile = async (req , res)=>{
     try {
         const barberId = req.barberId; 
-        const profileData = await BarberModel.findById(barberId).select('-password')
+        const profileData = await BarberModel.findById(barberId).select('-password').populate('services')
          
         res.json({success: true , profileData})
     } catch (error) {
@@ -163,4 +164,16 @@ const updateBarberProfile =  async (req , res)=>{
         
      }
 }
-export { changeAvailability ,  barberlist,barberLogin,getBarberBookings , CompleteBooking , CancelBooking,barberDashboard, barberProfile, updateBarberProfile};
+// Api to fetch all services
+// Yeh function client ya admin ko database ke saare services list return karne ke liye hai
+const getServices = async (req, res) => {
+    try {
+        const services = await ServiceModel.find({});
+        res.json({ success: true, services });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: error.message });
+    }
+};
+
+export { changeAvailability ,  barberlist,barberLogin,getBarberBookings , CompleteBooking , CancelBooking,barberDashboard, barberProfile, updateBarberProfile, getServices};

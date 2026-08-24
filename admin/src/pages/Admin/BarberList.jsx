@@ -26,7 +26,11 @@ const BarberList = () => {
             />
             <div>
               <p className="text-xl font-semibold mb-1">{item.name}</p>
-              <p className="text-sm text-gray-300 mb-4">{item.services}</p>
+              <p className="text-sm text-gray-300 mb-4 font-light">
+                {Array.isArray(item.services) 
+                  ? item.services.map(s => s.name).join(", ") 
+                  : item.services}
+              </p>
               <div className="flex items-center gap-3">
                 <input
                   type="checkbox"

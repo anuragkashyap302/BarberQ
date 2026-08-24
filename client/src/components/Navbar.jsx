@@ -11,7 +11,7 @@ const Navbar = () => {
   const [showSearch, setShowSearch] = useState(false);
   const [searchCity, setSearchCity] = useState("");
   const [searchService, setSearchService] = useState("All");
-  const { token, setToken, userData, barbers } = useContext(AppContext);
+  const { token, setToken, userData, barbers, services } = useContext(AppContext);
 
   const logout = () => {
     setToken(false);
@@ -124,9 +124,9 @@ const Navbar = () => {
                 className="w-full px-3 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-pink-500 mb-3 text-sm"
               >
                 <option value="All">All Services</option>
-                <option value="Haircut & Styling">Haircut & Styling</option>
-                <option value="Beard Grooming">Beard Grooming</option>
-                <option value="Facial & Spa">Facial & Spa</option>
+                {services.map((s) => (
+                  <option key={s._id} value={s.name}>{s.name}</option>
+                ))}
               </select>
               <div className="flex gap-2 mb-3">
                 <button
@@ -284,9 +284,9 @@ const Navbar = () => {
               className="w-full px-3 py-2 rounded-lg bg-gray-800 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-pink-500 mb-2 text-sm"
             >
               <option value="All">All Services</option>
-              <option value="Haircut & Styling">Haircut & Styling</option>
-              <option value="Beard Grooming">Beard Grooming</option>
-              <option value="Facial & Spa">Facial & Spa</option>
+              {services.map((s) => (
+                <option key={s._id} value={s.name}>{s.name}</option>
+              ))}
             </select>
             <button
               onClick={() => {

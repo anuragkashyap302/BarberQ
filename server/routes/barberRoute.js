@@ -1,9 +1,10 @@
 import express from 'express';
 const barberRouter = express.Router()
-import { barberlist ,barberLogin, getBarberBookings,CompleteBooking, CancelBooking, barberDashboard, barberProfile , updateBarberProfile} from '../controllers/barberController.js';
+import { barberlist ,barberLogin, getBarberBookings,CompleteBooking, CancelBooking, barberDashboard, barberProfile , updateBarberProfile, getServices} from '../controllers/barberController.js';
 import authBarber from '../middlewares/authBarber.js';
 
 barberRouter.get('/list', barberlist )
+barberRouter.get('/services', getServices)
 barberRouter.post('/login', barberLogin )
 barberRouter.get('/bookings',authBarber,getBarberBookings)
 barberRouter.post('/complete-booking',authBarber,CompleteBooking)

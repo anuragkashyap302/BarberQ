@@ -59,7 +59,10 @@ export const barbers = [
         address: {
             line1: 'MG Road',
             line2: 'Bengaluru, Karnataka'
-        }
+        },
+        // Login Credentials for Testing:
+        // Email: rajesh@barberq.com
+        // Password: barber123
     },
     {
         _id: 'barber2',
@@ -72,7 +75,10 @@ export const barbers = [
         address: {
             line1: 'Connaught Place',
             line2: 'New Delhi'
-        }
+        },
+        // Login Credentials for Testing:
+        // Email: aman@barberq.com
+        // Password: barber123
     },
     {
         _id: 'barber3',
@@ -85,7 +91,10 @@ export const barbers = [
         address: {
             line1: 'Marine Drive',
             line2: 'Mumbai, Maharashtra'
-        }
+        },
+        // Login Credentials for Testing:
+        // Email: sameer@barberq.com
+        // Password: barber123
     },
     {
         _id: 'barber4',
@@ -98,7 +107,10 @@ export const barbers = [
         address: {
             line1: 'Park Street',
             line2: 'Kolkata, West Bengal'
-        }
+        },
+        // Login Credentials for Testing:
+        // Email: karan@barberq.com
+        // Password: barber123
     },
     {
         _id: 'barber5',
@@ -111,7 +123,10 @@ export const barbers = [
         address: {
             line1: 'Banjara Hills',
             line2: 'Hyderabad, Telangana'
-        }
+        },
+        // Login Credentials for Testing:
+        // Email: chahat@barberq.com
+        // Password: barber123
     },
     {
         _id: 'barber6',
@@ -124,7 +139,10 @@ export const barbers = [
         address: {
             line1: 'Hazratganj',
             line2: 'Lucknow, Uttar Pradesh'
-        }
+        },
+        // Login Credentials for Testing:
+        // Email: aditya@barberq.com
+        // Password: barber123
     },
     {
         _id: 'barber7',
@@ -137,7 +155,10 @@ export const barbers = [
         address: {
             line1: 'RK Beach',
             line2: 'Visakhapatnam, Andhra Pradesh'
-        }
+        },
+        // Login Credentials for Testing:
+        // Email: suresh@barberq.com
+        // Password: barber123
     },
     {
         _id: 'barber8',
@@ -150,9 +171,10 @@ export const barbers = [
         address: {
             line1: 'Sector 17',
             line2: 'Chandigarh'
-        }
-        
-   //12345678 pass
+        },
+        // Login Credentials for Testing:
+        // Email: rohit@barberq.com
+        // Password: barber123
     },
     {
         _id: 'barber9',
@@ -165,8 +187,10 @@ export const barbers = [
         address: {
             line1: 'Fort Kochi',
             line2: 'Kochi, Kerala'
-        }
-        
+        },
+        // Login Credentials for Testing:
+        // Email: vikas@barberq.com
+        // Password: barber123
     },
     {
         _id: 'barber10',
@@ -179,7 +203,10 @@ export const barbers = [
         address: {
             line1: 'Bistupur',
             line2: 'Jamshedpur, Jharkhand'
-        }
+        },
+        // Login Credentials for Testing:
+        // Email: deepak@barberq.com
+        // Password: barber123
     },
     {
         _id: 'barber11',
@@ -192,7 +219,10 @@ export const barbers = [
         address: {
             line1: 'MI Road',
             line2: 'Jaipur, Rajasthan'
-        }
+        },
+        // Login Credentials for Testing:
+        // Email: arjun@barberq.com
+        // Password: barber123
     },
     {
         _id: 'barber12',
@@ -205,6 +235,24 @@ export const barbers = [
         address: {
             line1: 'Paltan Bazaar',
             line2: 'Dehradun, Uttarakhand'
-        }
+        },
+        // Login Credentials for Testing:
+        // Email: imran@barberq.com
+        // Password: barber123
     }
 ];
+
+export const barberImages = {
+    barber1,
+    barber2,
+    barber3,
+    barber4,
+    barber5,
+    barber6,
+    barber7,
+    barber8,
+    barber9,
+    barber10,
+    barber11,
+    barber12
+};

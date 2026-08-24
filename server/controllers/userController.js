@@ -103,10 +103,11 @@ const updateProfile = async (req, res) => {
     }
 }
 // api to booking a slot
+// Yeh function client dwara appointment slot aur service book karne ke liye hai
 const bookSlot = async (req, res) => {
     try {
-        const { userId, barberId, slotDate, slotTime } = req.body;
-        const barberData = await BarberModel.findById(barberId).select("-password")
+        const { userId, barberId, slotDate, slotTime, serviceId, serviceName } = req.body;
+        const barberData = await BarberModel.findById(barberId).select("-password").populate("services")
         if (!barberData.available) {
             return res.json({ success: false, message: "Barber is not available" })
         }
@@ -125,12 +126,17 @@ const bookSlot = async (req, res) => {
         const userData = await UserModel.findById(userId).select("-password")
         delete barberData.slots_booked
 
+        const selectedServiceObj = barberData.services.find(s => s._id.toString() === serviceId);
+        const amount = selectedServiceObj ? selectedServiceObj.price : barberData.fees;
+
         const bookingData = {
             userId,
             barberId,
             userData,
             barberData,
-            amount: barberData.fees,
+            serviceId,
+            serviceName,
+            amount,
             slotTime,
             slotDate,
             date: Date.now()

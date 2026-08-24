@@ -11,6 +11,7 @@ import Dashboard from './pages/Admin/Dashboard';
 import AllBooking from './pages/Admin/AllBooking';
 import AddBarber from './pages/Admin/AddBarber';
 import BarberList from './pages/Admin/BarberList';
+import AddService from './pages/Admin/AddService';
 import { BarberContext } from './context/BarberContext';
 import BarberDashboard from './pages/Barber/BarberDashboard';
 import BarberBookings from './pages/Barber/BarberBookings';
@@ -33,6 +34,7 @@ const App = () => {
           <Route path='/admin-dashboard' element={<Dashboard />} />
           <Route path='/all-booking' element={<AllBooking />} />
           <Route path='/add-barber' element={<AddBarber />} />
+          <Route path='/add-service' element={<AddService />} />
           <Route path='/barber-list' element={<BarberList />} />
           {/* barber routes */}
           <Route path='/barber-dashboard' element={<BarberDashboard />} />

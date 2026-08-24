@@ -118,8 +118,18 @@ const BarberProfile = () => {
                 <h2 className="text-3xl font-extrabold tracking-tight text-white">{profileData.name}</h2>
               )}
               <p className="text-gray-400 text-sm">{profileData.email}</p>
-              <div className="inline-block px-3 py-1 rounded-full bg-pink-500/10 border border-pink-500/20 text-pink-400 text-xs font-semibold">
-                {profileData.services}
+              <div className="flex flex-wrap gap-1 justify-center md:justify-start">
+                {Array.isArray(profileData.services) ? (
+                  profileData.services.map((s) => (
+                    <span key={s._id} className="inline-block px-3 py-1 rounded-full bg-pink-500/10 border border-pink-500/20 text-pink-400 text-xs font-semibold">
+                      {s.name}
+                    </span>
+                  ))
+                ) : (
+                  <span className="inline-block px-3 py-1 rounded-full bg-pink-500/10 border border-pink-500/20 text-pink-400 text-xs font-semibold">
+                    {profileData.services}
+                  </span>
+                )}
               </div>
             </div>
           </div>

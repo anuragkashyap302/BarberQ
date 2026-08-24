@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from "react";
-// import { barbers } from "../assets/assets";
+import { barberImages } from "../assets/assets";
 import axios from "axios";
 import { toast } from 'react-toastify';
 
@@ -10,6 +10,7 @@ const AppContextProvider = (props)=>{
 
 const backendURL = import.meta.env.VITE_BACKEND_URL;
 const [barbers , setBarbers] = useState([]);
+const [services, setServices] = useState([]);
 const [token , setToken] = useState(localStorage.getItem('token')? localStorage.getItem('token'): false)
 const [userData , setUserData] = useState(false)
    
@@ -17,8 +18,14 @@ const [userData , setUserData] = useState(false)
    try {
       const {data} = await axios.get(backendURL+"/api/barber/list");
       if(data.success){
-        setBarbers(data.barbers);
-        
+        // Map backend string keys (barber1, barber2, etc.) to local React imports
+        const formattedBarbers = data.barbers.map(b => {
+          if (b.image && barberImages[b.image]) {
+            return { ...b, image: barberImages[b.image] };
+          }
+          return b;
+        });
+        setBarbers(formattedBarbers);
       } else{
         toast.error(data.message);
       }
@@ -26,6 +33,21 @@ const [userData , setUserData] = useState(false)
         console.log("Error while fetching barbers data", error);
         toast.error(error.message);
    }
+  }
+
+  // Yeh function database se saare available services ko fetch karta hai
+  const getServicesData = async () => {
+    try {
+      const { data } = await axios.get(backendURL + "/api/barber/services");
+      if (data.success) {
+        setServices(data.services);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      console.log("Error while fetching services data", error);
+      toast.error(error.message);
+    }
   }
 
   const userProfileData = async(userToken)=>{
@@ -45,10 +67,11 @@ const [userData , setUserData] = useState(false)
     }
   }
     const value = {
-    barbers,getBarbersData ,token ,setToken,backendURL, userData,setUserData, userProfileData
+    barbers,getBarbersData ,services,getServicesData,token ,setToken,backendURL, userData,setUserData, userProfileData
 }
     useEffect(()=>{
         getBarbersData();
+        getServicesData();
     },[])
 
     useEffect(()=>{

@@ -6,6 +6,7 @@ import BarberModel from '../models/barbermodel.js';
 import jwt from 'jsonwebtoken';
 import bookingModel from '../models/bookingModel.js';
 import UserModel from '../models/userModel.js';
+import ServiceModel from '../models/serviceModel.js';
 const addBarber = async (req, res) => {
     try {
        const {name, email, password,  services, experience, about, fees, address} = req.body;
@@ -33,13 +34,22 @@ const addBarber = async (req, res) => {
                 resource_type: 'image'
                 });
                 const imageUrl = imageUpload.secure_url;
+            // Parse services array from string (sent as JSON from frontend)
+            // Yeh function frontend se bheje gaye services array string ko parse karta hai
+            let parsedServices = [];
+            try {
+                parsedServices = JSON.parse(services);
+            } catch (err) {
+                parsedServices = [services];
+            }
+
             // create new barber
             const barberData = {
                 name,
                 email,
                 password: hashedPassword,
                 image: imageUrl,
-                services,
+                services: parsedServices,
                 experience,
                 about,
                 fees,
@@ -82,7 +92,7 @@ const loginAdmin = async (req, res) => {
 //api to get all barbers can be done in frontend itself using env variables
 const allBarbers = async (req, res) => {
     try {
-             const barbers = await BarberModel.find({}).select('-password');
+             const barbers = await BarberModel.find({}).select('-password').populate('services');
               res.json({success: true, barbers});
       } catch (error) {
           console.log(error);
@@ -130,7 +140,7 @@ const allBarbers = async (req, res) => {
     // dashboad datat for admin
     const adminDashboard = async (req, res) => {
        try {
-        const barbers = await BarberModel.find({});
+        const barbers = await BarberModel.find({}).populate('services');
         const  user  = await UserModel.find({});
         const bookings = await bookingModel.find({});
 
@@ -153,4 +163,33 @@ const allBarbers = async (req, res) => {
        }
     }
 
-export {addBarber , loginAdmin, allBarbers, bookingsAdmin,BookingCancel,adminDashboard};
+// Api for adding service by admin
+// Yeh function admin ko naya service add karne me help karta hai
+const addService = async (req, res) => {
+    try {
+        const { name, description, price, duration } = req.body;
+        if (!name || !description || price === undefined || !duration) {
+            return res.json({ success: false, message: "All fields are required" });
+        }
+        
+        // check if service already exists
+        const existingService = await ServiceModel.findOne({ name });
+        if (existingService) {
+            return res.json({ success: false, message: "Service already exists" });
+        }
+
+        const newService = new ServiceModel({ 
+            name, 
+            description, 
+            price: Number(price), 
+            duration: Number(duration) 
+        });
+        await newService.save();
+        return res.json({ success: true, message: "Service added successfully" });
+    } catch (error) {
+        console.log(error);
+        return res.json({ success: false, message: error.message });
+    }
+};
+
+export {addBarber , loginAdmin, allBarbers, bookingsAdmin,BookingCancel,adminDashboard, addService};

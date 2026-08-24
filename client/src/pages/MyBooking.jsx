@@ -122,9 +122,17 @@ const MyBooking = () => {
               <h2 className="text-xl font-semibold text-white drop-shadow-sm">
                 {item.barberData.name}
               </h2>
-              <p className="text-sm text-gray-200">{item.barberData.services}</p>
+              {item.serviceName ? (
+                <p className="text-sm text-pink-400 font-medium">Service: {item.serviceName}</p>
+              ) : (
+                <p className="text-sm text-gray-200">
+                  {Array.isArray(item.barberData.services) 
+                    ? item.barberData.services.map(s => s.name).join(", ") 
+                    : item.barberData.services}
+                </p>
+              )}
 
-              <p className="text-lg font-bold text-pink-400">₹{item.barberData.fees}</p>
+              <p className="text-lg font-bold text-pink-400">₹{item.amount || item.barberData.fees}</p>
 
               <div className="text-sm text-gray-200">
                 <p className="font-medium text-white">Address:</p>

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState  ,useEffect} from "react";
 import { assets } from "../../assets/assets";
 import { AdminContext } from "../../context/AdminContext";
 import { toast } from "react-toastify";
@@ -23,12 +23,30 @@ const AddBarber = () => {
   const [barberPassword, setBarberPassword] = useState("");
   const [experience, setExperience] = useState("1 Year");
   const [fees, setFees] = useState("");
-  const [services, setServices] = useState("Haircut & Styling");
+  const [servicesList, setServicesList] = useState([]);
+  const [selectedServices, setSelectedServices] = useState([]);
   const [address1, setAddress1] = useState("");
   const [address2, setAddress2] = useState("");
   const [about, setAbout] = useState("");
 
   const {backendURL , aToken} = useContext(AdminContext);
+
+  // Yeh function database se saare available services ko fetch karta hai
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const { data } = await axios.get(backendURL + "/api/barber/services");
+        if (data.success) {
+          setServicesList(data.services);
+        } else {
+          toast.error(data.message);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchServices();
+  }, [backendURL]);
 
   // ✅ Submit handler
   const handleSubmit = async (e) => {
@@ -44,7 +62,7 @@ const AddBarber = () => {
     formData.append("password", barberPassword);
     formData.append("experience", experience);
     formData.append("fees", Number(fees));
-    formData.append("services", services);
+    formData.append("services", JSON.stringify(selectedServices));
     formData.append("address", JSON.stringify({line1:address1, line2:address2}));
     formData.append("about", about);
 
@@ -63,12 +81,12 @@ const AddBarber = () => {
        setBarberName("");
        setBarberEmail("");
       setBarberPassword("");
-     setExperience("1 Year");
+         setExperience("1 Year");
       setFees("");
-    setServices("Haircut & Styling");
-    setAddress1("");
-    setAddress2("");
-    setAbout("");
+      setSelectedServices([]);
+      setAddress1("");
+      setAddress2("");
+      setAbout("");
     }
     else{
         toast.error(data.message)
@@ -209,20 +227,35 @@ const AddBarber = () => {
           </div>
 
           {/* Services Selection */}
-          <div className="relative">
-            <label className="block text-sm font-medium text-gray-300 mb-1.5 flex items-center gap-1.5">
+          <div className="md:col-span-2 relative">
+            <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-1.5">
               <Scissors size={16} className="text-pink-400" />
-              Offered Service
+              Offered Services (Select all that apply)
             </label>
-            <select
-              onChange={(e) => setServices(e.target.value)}
-              value={services}
-              className="w-full px-4 py-2.5 rounded-xl bg-black/30 border border-gray-600 focus:border-pink-500 focus:ring-1 focus:ring-pink-500 outline-none text-gray-100 transition"
-            >
-              <option className="bg-[#0f172a] text-white" value="Haircut & Styling">Haircut & Styling</option>
-              <option className="bg-[#0f172a] text-white" value="Beard Grooming">Beard Grooming</option>
-              <option className="bg-[#0f172a] text-white" value="Facial & Spa">Facial & Spa</option>
-            </select>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 bg-black/30 border border-gray-600 rounded-xl p-4 max-h-48 overflow-y-auto">
+              {servicesList.length === 0 ? (
+                <p className="text-gray-400 text-sm col-span-full">No services found. Add services first.</p>
+              ) : (
+                servicesList.map((service) => (
+                  <label key={service._id} className="flex items-center gap-2.5 text-gray-300 cursor-pointer hover:text-white transition">
+                    <input
+                      type="checkbox"
+                      value={service._id}
+                      checked={selectedServices.includes(service._id)}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setSelectedServices([...selectedServices, service._id]);
+                        } else {
+                          setSelectedServices(selectedServices.filter(id => id !== service._id));
+                        }
+                      }}
+                      className="w-4 h-4 rounded border-gray-600 text-pink-500 focus:ring-pink-500 focus:ring-offset-gray-900 bg-black/40"
+                    />
+                    <span className="text-sm">{service.name}</span>
+                  </label>
+                ))
+              )}
+            </div>
           </div>
 
           {/* Address details (full width) */}

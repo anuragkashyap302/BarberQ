@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
 import { toast } from "react-toastify";
 import axios from "axios";
@@ -7,32 +7,39 @@ import axios from "axios";
 const Booking = () => {
   const { barberId } = useParams();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { barbers, backendURL, token, getBarbersData,userData } =
     useContext(AppContext);
 
   const [barberSlots, setBarberSlots] = useState([]);
   const [dayIndex, setDayIndex] = useState(0);
   const [selectedSlot, setSelectedSlot] = useState(null);
+  const [selectedService, setSelectedService] = useState(null);
 
   const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
   const barber = barbers.find((b) => b._id === barberId);
+  const preSelectedServiceName = searchParams.get("service");
 
-  // ✅ Category check (only 3 allowed services)
-  const allowedCategories = [
-    "Haircut & Styling",
-    "Beard Grooming",
-    "Facial & Spa",
-  ];
+  // Yeh hook URL parameter se aayi pre-selected service ko state me set karta hai
+  useEffect(() => {
+    if (barber && preSelectedServiceName) {
+      const found = (barber.services || []).find(s => s.name === preSelectedServiceName);
+      if (found) {
+        setSelectedService(found);
+      }
+    }
+  }, [barber, preSelectedServiceName]);
 
-  const barberCategory = allowedCategories.includes(barber?.speciality)
-    ? barber.speciality
-    : null;
-
-  // ✅ Related barbers
-  const relatedBarbers = barberCategory
+  // Related barbers who offer at least one shared service
+  // Yeh related barbers filter karta hai jo same type ki service dete hain
+  const relatedBarbers = barber
     ? barbers.filter(
-        (b) => b._id !== barberId && b.speciality === barberCategory
+        (b) => b._id !== barberId && (
+          Array.isArray(b.services) && Array.isArray(barber.services)
+            ? b.services.some(s1 => barber.services.some(s2 => s1._id === s2._id))
+            : false
+        )
       )
     : [];
 
@@ -101,6 +108,11 @@ const Booking = () => {
     return;
   }
 
+  if (!selectedService) {
+    toast.warn("Please select a service first");
+    return;
+  }
+
   try {
     const date = selectedSlot.datetime;  // use selected slot
     let day = date.getDate();
@@ -114,7 +126,9 @@ const Booking = () => {
     userId: userData._id,        // add this
     barberId,
     slotDate,
-    slotTime: selectedSlot.time
+    slotTime: selectedSlot.time,
+    serviceId: selectedService._id,
+    serviceName: selectedService.name
   },
   { headers: { token } }
 );
@@ -156,10 +170,65 @@ const Booking = () => {
             />
             <div>
               <h2 className="text-3xl font-bold">{barber.name}</h2>
-              <p className="text-pink-400">{barber.speciality}</p>
-              <p className="text-gray-400">{barber.experience}</p>
+              <div className="flex flex-wrap gap-1.5 mt-2">
+                {Array.isArray(barber.services) ? (
+                  barber.services.map((s) => (
+                    <span key={s._id} className="inline-block px-3 py-1 rounded-full bg-pink-500/10 border border-pink-500/20 text-pink-400 text-xs font-semibold">
+                      {s.name}
+                    </span>
+                  ))
+                ) : (
+                  <span className="inline-block px-3 py-1 rounded-full bg-pink-500/10 border border-pink-500/20 text-pink-400 text-xs font-semibold">
+                    {barber.services}
+                  </span>
+                )}
+              </div>
+              <p className="text-gray-400 mt-2">{barber.experience}</p>
               <p className="mt-4">{barber.about}</p>
-              <p className="mt-3 font-bold text-pink-500">₹{barber.fees}</p>
+              <p className="mt-3 font-bold text-pink-500">
+                ₹{selectedService ? selectedService.price : barber.fees}
+              </p>
+            </div>
+          </div>
+
+          {/* Service Selection */}
+          <div className="mb-10">
+            <h3 className="font-semibold mb-4 text-lg">Select Service</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+              {Array.isArray(barber.services) && barber.services.length > 0 ? (
+                barber.services.map((service) => (
+                  <button
+                    key={service._id}
+                    onClick={() => setSelectedService(service)}
+                    className={`flex flex-col p-4 rounded-xl border text-left transition duration-300 ${
+                      selectedService?._id === service._id
+                        ? "bg-pink-500 text-white border-pink-500 shadow-lg shadow-pink-500/20"
+                        : "bg-gray-900 border-gray-700 text-gray-300 hover:bg-gray-800 hover:text-white"
+                    }`}
+                  >
+                    <div className="flex justify-between items-start w-full">
+                      <span className="font-bold text-base">{service.name}</span>
+                      <span className={`text-xs px-2 py-0.5 rounded font-bold ${
+                        selectedService?._id === service._id
+                          ? "bg-white/20 text-white"
+                          : "bg-pink-500/10 text-pink-400 border border-pink-500/20"
+                      }`}>
+                        ₹{service.price || 0}
+                      </span>
+                    </div>
+                    <span className={`text-xs mt-1 flex items-center gap-1 ${
+                      selectedService?._id === service._id ? "text-white/80" : "text-gray-400"
+                    }`}>
+                      ⏱ {service.duration || 30} mins
+                    </span>
+                    <span className={`text-xs mt-2 line-clamp-2 ${
+                      selectedService?._id === service._id ? "text-white/95" : "text-gray-300"
+                    }`}>{service.description}</span>
+                  </button>
+                ))
+              ) : (
+                <p className="text-gray-400 text-sm">No services listed for this barber.</p>
+              )}
             </div>
           </div>
 
@@ -214,15 +283,19 @@ const Booking = () => {
             {/* Book Button */}
             <button
               onClick={bookSlot}
-              disabled={!selectedSlot}
+              disabled={!selectedSlot || !selectedService}
               className={`w-full py-5 rounded-full font-semibold transition 
                 ${
-                  selectedSlot
-                    ? "bg-pink-500 hover:bg-pink-600 text-white"
+                  selectedSlot && selectedService
+                    ? "bg-pink-500 hover:bg-pink-600 text-white cursor-pointer"
                     : "bg-gray-700 text-gray-400 cursor-not-allowed"
                 }`}
             >
-              {selectedSlot ? "Book Appointment" : "Select a slot to book"}
+              {!selectedService
+                ? "Select a service to book"
+                : !selectedSlot
+                ? "Select a slot to book"
+                : "Book Appointment"}
             </button>
           </div>
 
@@ -230,7 +303,7 @@ const Booking = () => {
           {relatedBarbers.length > 0 && (
             <div className="mt-12">
               <h3 className="text-xl font-semibold mb-4">
-                Other {barberCategory} Experts
+                Other Experts
               </h3>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                 {relatedBarbers.map((rel) => (

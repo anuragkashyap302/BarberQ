@@ -1,5 +1,5 @@
 import express from 'express';
-import { addBarber ,adminDashboard,allBarbers,BookingCancel,bookingsAdmin,loginAdmin} from '../controllers/adminController.js';
+import { addBarber ,adminDashboard,allBarbers,BookingCancel,bookingsAdmin,loginAdmin, addService} from '../controllers/adminController.js';
 import upload from '../middlewares/multer.js';
 import authAdmin from '../middlewares/authAdmin.js';
 import { changeAvailability } from '../controllers/barberController.js';
@@ -8,6 +8,7 @@ import { changeAvailability } from '../controllers/barberController.js';
 const adminRouter = express.Router();
 
 adminRouter.post('/add-barber',authAdmin , upload.single('image'), addBarber);
+adminRouter.post('/add-service', authAdmin, addService);
 adminRouter.post('/login', loginAdmin);
 adminRouter.post('/all-barbers',authAdmin, allBarbers)
 adminRouter.post('/change-availability', authAdmin, changeAvailability);
