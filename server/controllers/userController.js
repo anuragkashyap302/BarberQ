@@ -10,8 +10,8 @@ import Stripe from 'stripe'; // Stripe SDK import kiya online payment ke liye
 import dotenv from 'dotenv';
 import transporter from "../config/nodemailer.js";
 
-// Stripe gateway ko backend ke secret key ke sath configure kiya
-const stripeInstance = new Stripe(process.env.STRIPE_SECRET_KEY);
+// Agar environment variables me Stripe Secret Key missing hai toh default dummy value provide ki taaki serverless function crash na ho
+const stripeInstance = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_dummy_stripe_key_placeholder');
 //api to resitter user
 const registerUser = async (req, res) => {
   try {
