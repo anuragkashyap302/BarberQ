@@ -42,7 +42,7 @@ const TopBarbers = () => {
             <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
               <div className="flex items-center justify-between text-sm gap-2">
                 <p className="font-semibold truncate">{item.name}</p> 
-                <span className="flex items-center gap-0.5 bg-yellow-400/90 text-black px-1.5 py-0.5 rounded text-[10px] font-extrabold whitespace-nowrap shadow">
+                <span className="flex items-center gap-0.5 bg-pink-400/90 text-black px-1.5 py-0.5 rounded text-[10px] font-extrabold whitespace-nowrap shadow">
                   ★ {item.rating || "4.5"}
                 </span>
               </div>

@@ -2,6 +2,7 @@ import React, { useContext, useEffect } from 'react'
 import { AdminContext } from '../../context/AdminContext'
 import { AppContext } from '../../context/AppContext'
 import { Scissors, Calendar, Users, IndianRupee, ClipboardList, XCircle } from 'lucide-react'
+import { barberImages } from '../../assets/assets'
 
 const Dashboard = () => {
   const { aToken, dashData, getDashData, cancelBooking } = useContext(AdminContext)
@@ -78,8 +79,9 @@ const Dashboard = () => {
               >
                 {/* Barber Info */}
                 <div className="flex items-center gap-3">
+                  {/* Hindi Comment: local key ko mapper dictionary se load kiya ya directly Cloudinary URL link retrieve kiya */}
                   <img
-                    src={item.barberData.image}
+                    src={barberImages[item.barberData.image] || item.barberData.image}
                     alt="barber"
                     className="w-12 h-12 rounded-full object-cover"
                   />

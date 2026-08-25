@@ -1,5 +1,5 @@
 import express from "express";
-import { registerUser, loginUser, getProfile, updateProfile ,bookSlot, listBookings, cancelBooking, paymentRazorpay, verifyRazorpay} from "../controllers/userController.js";
+import { registerUser, loginUser, getProfile, updateProfile ,bookSlot, listBookings, cancelBooking, paymentStripe, verifyStripe} from "../controllers/userController.js";
 import authUser from "../middlewares/authUser.js";
 import upload from "../middlewares/multer.js";
 
@@ -12,6 +12,11 @@ userRouter.post("/update-profile", upload.single("image"), authUser, updateProfi
 userRouter.post("/book-slot", authUser, bookSlot);
 userRouter.get('/bookings',authUser, listBookings);
 userRouter.post('/cancel-booking',authUser, cancelBooking);
-userRouter.post('/payment-razorpay', authUser, paymentRazorpay);
-userRouter.post('/verify-razorpay', authUser, verifyRazorpay);
+
+// Hindi Comment: Stripe payment trigger karne ka route (unpaid bookings ke liye)
+userRouter.post('/payment-stripe', authUser, paymentStripe);
+
+// Hindi Comment: Stripe response verify karne ka route
+userRouter.post('/verify-stripe', authUser, verifyStripe);
+
 export default userRouter;

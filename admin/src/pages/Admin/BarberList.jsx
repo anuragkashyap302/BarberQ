@@ -1,5 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import { AdminContext } from "../../context/AdminContext";
+import { barberImages } from "../../assets/assets";
 
 const BarberList = () => {
   const { barbers, aToken, getAllBarbers, changeAvailability } = useContext(AdminContext);
@@ -19,8 +20,9 @@ const BarberList = () => {
             key={index}
             className="bg-[#1e293b]/70 backdrop-blur-md rounded-2xl shadow-lg p-6 transform hover:scale-105 hover:shadow-2xl transition-all duration-300"
           >
+            {/* Hindi Comment: local key ko mapper dictionary se load kiya ya directly Cloudinary URL link retrieve kiya */}
             <img
-              src={item.image}
+              src={barberImages[item.image] || item.image}
               alt={item.name}
               className="w-full h-52 object-cover rounded-xl mb-4"
             />

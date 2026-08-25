@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { assets } from "../../assets/assets";
+import { assets, barberImages } from "../../assets/assets";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { BarberContext } from "../../context/BarberContext";
@@ -75,8 +75,9 @@ const BarberProfile = () => {
             <div className="relative group">
               {isEditing ? (
                 <label htmlFor="image" className="cursor-pointer block relative w-32 h-32 rounded-full overflow-hidden border-4 border-pink-500/40 hover:border-pink-500 transition shadow-lg">
+                  {/* Hindi Comment: Agar user naya image choose karta hai toh use ObjectURL ke sath show karenge, nahi toh database se loaded local key ya Cloudinary link retrieve karenge */}
                   <img
-                    src={image ? URL.createObjectURL(image) : profileData.image}
+                    src={image ? URL.createObjectURL(image) : (barberImages[profileData.image] || profileData.image)}
                     alt="Avatar"
                     className="w-full h-full object-cover"
                   />
@@ -94,7 +95,7 @@ const BarberProfile = () => {
               ) : (
                 <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-pink-500/40 shadow-lg">
                   <img
-                    src={profileData.image}
+                    src={barberImages[profileData.image] || profileData.image}
                     alt="Barber"
                     className="w-full h-full object-cover"
                   />

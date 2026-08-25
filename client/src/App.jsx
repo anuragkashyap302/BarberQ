@@ -1,5 +1,5 @@
 import React from 'react'
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes, useLocation } from 'react-router-dom'
 import Home from './pages/Home'
 import Barber from './pages/Barber'
 import Login from './pages/Login'
@@ -10,14 +10,19 @@ import Booking from './pages/Booking'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import About from './pages/About'
+import ScrollToTop from './components/ScrollToTop'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; // <-- No indentation here
 
 const App = () => {
+  const location = useLocation();
+  const isBookingPage = location.pathname.startsWith('/booking/');
+
   return (
     <div>
       <ToastContainer />
-      <Navbar />
+      <ScrollToTop />
+      {!isBookingPage && <Navbar />}
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/barbers' element={<Barber />} />
@@ -34,4 +39,4 @@ const App = () => {
   )
 }
 
-export default App
+export default App;

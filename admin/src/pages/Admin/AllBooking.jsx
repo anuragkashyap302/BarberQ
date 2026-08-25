@@ -2,6 +2,7 @@ import React, { useContext, useEffect } from 'react'
 import { AdminContext } from '../../context/AdminContext'
 import { AppContext } from '../../context/AppContext'
 import { XCircle } from 'lucide-react'
+import { barberImages } from '../../assets/assets'
 
 const AllBooking = () => {
   const { aToken, bookings, getAllBookings,cancelBooking } = useContext(AdminContext)
@@ -61,8 +62,9 @@ const AllBooking = () => {
 
                 {/* Barber */}
                 <div className="flex items-center gap-3">
+                  {/* Hindi Comment: local key ko mapper dictionary se load kiya ya directly Cloudinary URL link retrieve kiya */}
                   <img
-                    src={booking.barberData.image}
+                    src={barberImages[booking.barberData.image] || booking.barberData.image}
                     alt="barberData"
                     className="w-10 h-10 rounded-full object-cover"
                   />
