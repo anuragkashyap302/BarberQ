@@ -4,7 +4,7 @@ import { AppContext } from '../../context/AppContext'
 import { assets } from '../../assets/assets'
 
 const BarberBookings = () => {
-  const { bToken, bookings, getBookings, completeBooking , cancelBooking } = useContext(BarberContext)
+  const { bToken, bookings, getBookings, completeBooking, cancelBooking } = useContext(BarberContext)
   const { calcuateAge, slotDateFormat } = useContext(AppContext)
 
   useEffect(() => {
@@ -52,17 +52,17 @@ const BarberBookings = () => {
                 {slotDateFormat(item.slotDate)}, {item.slotTime}
               </p>
               <p className="font-semibold text-green-400">₹{item.amount}</p>
-               {item.cancelled ? <p className='text-red-500'>Cancelled</p> : item.isCompleted
- ? <p className='text-green-500'>Completed</p>: <div className="flex gap-3">
-               
-                <button onClick={()=> cancelBooking(item._id, bToken)} className="p-2 rounded-full bg-red-500/20 hover:bg-red-500/40 transition cursor-pointer">
-                  <img src={assets.cancel_icon} alt="cancel" className="w-5" />
-                </button>
-                <button onClick={()=> completeBooking(item._id, bToken)} className="p-2 rounded-full bg-green-500/20 hover:bg-green-500/40 transition cursor-pointer">
-                  <img src={assets.tick_icon} alt="confirm" className="w-5" />
-                </button>
-              </div>}
-             
+              {item.cancelled ? <p className='text-red-500'>Cancelled</p> : item.isCompleted
+                ? <p className='text-green-500'>Completed</p> : <div className="flex gap-3">
+
+                  <button onClick={() => cancelBooking(item._id, bToken)} className="p-2 rounded-full bg-red-500/20 hover:bg-red-500/40 transition cursor-pointer">
+                    <img src={assets.cancel_icon} alt="cancel" className="w-5" />
+                  </button>
+                  <button onClick={() => completeBooking(item._id, bToken)} className="p-2 rounded-full bg-green-500/20 hover:bg-green-500/40 transition cursor-pointer">
+                    <img src={assets.tick_icon} alt="confirm" className="w-5" />
+                  </button>
+                </div>}
+
             </div>
 
             {/* Mobile Card */}
@@ -92,16 +92,16 @@ const BarberBookings = () => {
                   {slotDateFormat(item.slotDate)}, {item.slotTime}
                 </p>
               </div>
-             {item.cancelled ? <p>Cancelled</p> : item.isCompleted
- ? <p>Completed</p>: <div className="flex gap-3">
-               
-                <button onClick={()=> cancelBooking(item._id, bToken)} className="p-2 rounded-full bg-red-500/20 hover:bg-red-500/40 transition cursor-pointer">
-                  <img src={assets.cancel_icon} alt="cancel" className="w-5" />
-                </button>
-                <button onClick={()=> completeBooking(item._id, bToken)} className="p-2 rounded-full bg-green-500/20 hover:bg-green-500/40 transition cursor-pointer">
-                  <img src={assets.tick_icon} alt="confirm" className="w-5" />
-                </button>
-              </div>}
+              {item.cancelled ? <p>Cancelled</p> : item.isCompleted
+                ? <p>Completed</p> : <div className="flex gap-3">
+
+                  <button onClick={() => cancelBooking(item._id, bToken)} className="p-2 rounded-full bg-red-500/20 hover:bg-red-500/40 transition cursor-pointer">
+                    <img src={assets.cancel_icon} alt="cancel" className="w-5" />
+                  </button>
+                  <button onClick={() => completeBooking(item._id, bToken)} className="p-2 rounded-full bg-green-500/20 hover:bg-green-500/40 transition cursor-pointer">
+                    <img src={assets.tick_icon} alt="confirm" className="w-5" />
+                  </button>
+                </div>}
             </div>
           </div>
         ))}

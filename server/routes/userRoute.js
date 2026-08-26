@@ -13,10 +13,10 @@ userRouter.post("/book-slot", authUser, bookSlot);
 userRouter.get('/bookings',authUser, listBookings);
 userRouter.post('/cancel-booking',authUser, cancelBooking);
 
-// Hindi Comment: Stripe payment trigger karne ka route (unpaid bookings ke liye)
+//  Stripe payment trigger karne ka route (unpaid bookings ke liye)
 userRouter.post('/payment-stripe', authUser, paymentStripe);
 
-// Hindi Comment: Stripe response verify karne ka route
+// Stripe response verify karne ka route
 userRouter.post('/verify-stripe', authUser, verifyStripe);
 
 export default userRouter;

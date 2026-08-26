@@ -51,6 +51,7 @@ const barberLogin = async (req, res) => {
     try {
         const barberId = req.barberId; // agar req.body hai to {object} = req.body nahi to simple samy barber kiye na yaha bbhi
         const bookings = await bookingModel.find({ barberId })
+        // yaha pe .populate karke user ka data bhi bhej skte all though bookings contain all things
         
          
         

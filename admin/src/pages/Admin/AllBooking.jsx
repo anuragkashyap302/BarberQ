@@ -20,7 +20,7 @@ const AllBooking = () => {
 
       <div className="overflow-x-auto">
         <div className="min-w-[800px]">
-          {/* Header */}
+          {/* Header table ki taraah hai ye rows and colunm me show hogi saare bookings table format me dikhegi */}
           <div className="grid grid-cols-7 gap-4 bg-white/10 backdrop-blur-md rounded-lg px-4 py-3 text-sm font-semibold uppercase tracking-wide">
             <p>#</p>
             <p>Customer</p>
@@ -31,7 +31,7 @@ const AllBooking = () => {
             <p>Actions</p>
           </div>
 
-          {/* Bookings */}
+          {/* Bookings table ke andar ki rows and columns, yaha  saare bookings ko rows me show kiya hai */}
           <div className="mt-3 space-y-3">
             {bookings.map((booking, index) => (
               <div
@@ -62,7 +62,7 @@ const AllBooking = () => {
 
                 {/* Barber */}
                 <div className="flex items-center gap-3">
-                  {/* Hindi Comment: local key ko mapper dictionary se load kiya ya directly Cloudinary URL link retrieve kiya */}
+                  {/* local key ko mapper dictionary se load kiya ya directly Cloudinary URL link retrieve kiya */}
                   <img
                     src={barberImages[booking.barberData.image] || booking.barberData.image}
                     alt="barberData"

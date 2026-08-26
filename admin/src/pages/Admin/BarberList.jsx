@@ -20,7 +20,7 @@ const BarberList = () => {
             key={index}
             className="bg-[#1e293b]/70 backdrop-blur-md rounded-2xl shadow-lg p-6 transform hover:scale-105 hover:shadow-2xl transition-all duration-300"
           >
-            {/* Hindi Comment: local key ko mapper dictionary se load kiya ya directly Cloudinary URL link retrieve kiya */}
+            {/* local key ko mapper dictionary se load kiya ya directly Cloudinary URL link retrieve kiya */}
             <img
               src={barberImages[item.image] || item.image}
               alt={item.name}

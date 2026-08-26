@@ -75,7 +75,7 @@ const BarberProfile = () => {
             <div className="relative group">
               {isEditing ? (
                 <label htmlFor="image" className="cursor-pointer block relative w-32 h-32 rounded-full overflow-hidden border-4 border-pink-500/40 hover:border-pink-500 transition shadow-lg">
-                  {/* Hindi Comment: Agar user naya image choose karta hai toh use ObjectURL ke sath show karenge, nahi toh database se loaded local key ya Cloudinary link retrieve karenge */}
+                  {/*  Agar user naya image choose karta hai toh use ObjectURL ke sath show karenge, nahi toh database se loaded local key ya Cloudinary link retrieve karenge */}
                   <img
                     src={image ? URL.createObjectURL(image) : (barberImages[profileData.image] || profileData.image)}
                     alt="Avatar"

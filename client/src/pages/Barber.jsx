@@ -17,7 +17,7 @@ const Barber = () => {
   );
   const searchCity = searchParams.get("city") || "";
 
-  // ✅ Update state when URL params change
+  //  Update state when URL params change
   useEffect(() => {
     if (searchParams.get("service")) {
       setSelectedSpeciality(searchParams.get("service"));
@@ -26,7 +26,7 @@ const Barber = () => {
     }
   }, [speciality, searchParams]);
 
-  // ✅ Filter by both city and speciality checking services array
+  //  Filter by both city and speciality checking services array
   const filteredBarbers = barbers.filter((barber) => {
     const matchesCity = !searchCity || barber.address?.line2?.toLowerCase().includes(searchCity.toLowerCase());
     const matchesService = selectedSpeciality === "All" || (
@@ -38,7 +38,7 @@ const Barber = () => {
   });
 
 
-  // ✅ Sidebar click handler
+  //  Sidebar click handler
   const handleCategoryClick = (category) => {
     navigate(category === "All" ? "/barbers" : `/barbers/${encodeURIComponent(category)}`);
   };

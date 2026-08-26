@@ -19,7 +19,7 @@ const Welcome = () => {
 
   const role = aToken ? 'Admin' : 'Barber'
 
-  // Shortcut items based on role
+  // Shortcut items based on role isme add karte jao agar naya sidebar kuch bna to 
   const adminShortcuts = [
     {
       title: 'Admin Dashboard',

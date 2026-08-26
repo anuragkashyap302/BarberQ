@@ -7,6 +7,7 @@ const Services = () => {
   const { services } = useContext(AppContext);
 
   // Yeh function service name ke hisab se premium logo/icon choose karta hai
+  // photo bhi use kar sakte hain icon ke jagah just name ke hisab se
   const getServiceIcon = (name) => {
     const title = name.toLowerCase();
     if (title.includes("kids") || title.includes("child")) {

@@ -16,7 +16,7 @@ const Booking = () => {
   const [dayIndex, setDayIndex] = useState(0);
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [selectedService, setSelectedService] = useState(null);
-  // Hindi Comment: Payment method ke status ko track karne ke liye state (Cash or Stripe)
+  // Payment method ke status ko track karne ke liye state (Cash or Stripe)
   const [paymentMethod, setPaymentMethod] = useState("Cash");
 
   const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -46,7 +46,7 @@ const Booking = () => {
       )
     : [];
 
-  // ✅ Generate slots for next 7 days
+  //  Generate slots for next 7 days
   const generateSlots = () => {
     let today = new Date();
     let weekSlots = [];
@@ -94,7 +94,8 @@ const Booking = () => {
     setBarberSlots(weekSlots);
   };
   // ek functionallty add karna hai book slot ka jo book ho chuka hai wo disable ho jaye
-  /*
+  // but wo dikhe usme redis bullmq use kargnge for solt locking
+   /*
    let day = currDate.getDate();
     let month = currDate.getMonth() + 1;
     let year = currDate.getFullYear();
@@ -123,7 +124,7 @@ const Booking = () => {
     let year = date.getFullYear();
     const slotDate = day + "-" + month + "-" + year;
 
-    // Hindi Comment: book-slot API call me user ke input ke sath selected paymentMethod bhi send kiya
+    // book-slot API call me user ke input ke sath selected paymentMethod bhi send kiya
     const { data } = await axios.post(
       backendURL + "/api/user/book-slot",
       {
@@ -142,7 +143,7 @@ const Booking = () => {
       toast.success(data.message);
       getBarbersData();
       
-      // Hindi Comment: Agar stripe checkout link response me aayi hai toh user ko uspar redirect kiya
+      //  Agar stripe checkout link response me aayi hai toh user ko uspar redirect kiya
       if (data.session_url) {
         window.location.href = data.session_url;
       } else {

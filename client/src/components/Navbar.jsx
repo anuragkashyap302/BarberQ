@@ -47,7 +47,7 @@ const Navbar = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [location.pathname]);
-  // Reusable link styling
+  // Reusable link styling simple bhi rakh sakte hai but ok
   const navLinkStyle = ({ isActive }) =>
     `relative py-1 transition-all duration-300 
      ${isActive ? "text-pink-400" : "text-gray-300 hover:text-white"}
@@ -170,7 +170,7 @@ const Navbar = () => {
 
       {/* Profile / Login Button - Desktop Only */}
       <div className="hidden md:flex items-center gap-6">
-        {/* Admin Redirect Button */}
+        {/* Admin Redirect Button ye abhi same tab pe redirect ho raha hai */}
         <button
           onClick={() => window.location.href = import.meta.env.VITE_ADMIN_URL || 'http://localhost:5174'}
           className="border border-white/20 hover:border-pink-500 bg-white/10 hover:bg-pink-500/20 text-gray-200 hover:text-white px-4 py-1.5 rounded-full text-sm font-semibold transition-all duration-300 hover:scale-105 cursor-pointer shadow-md mr-4"
@@ -221,7 +221,7 @@ const Navbar = () => {
         ) : null}
       </div>
 
-      {/* Mobile Hamburger Icon + Search */}
+      {/* Mobile Hamburger Icon + Search  blue fit nahi  aa raa hai */}
       <div className="md:hidden flex items-center gap-3">
         {/* Mobile Search Icon */}
         <button

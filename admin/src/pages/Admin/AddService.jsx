@@ -13,7 +13,7 @@ const AddService = () => {
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // Yeh function database se saare services fetch karne ke liye hai
+  // Ye function database se saare services fetch karne ke liye hai
   const fetchServices = async () => {
     try {
       const { data } = await axios.get(backendURL + "/api/barber/services");

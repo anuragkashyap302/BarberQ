@@ -11,7 +11,7 @@ const authBarber = async (req, res, next) => {
     }
 
     const token_decode = jwt.verify(bToken, process.env.JWT_SECRET);
-    req.barberId = token_decode.id; // ✅ store on req, not req.body agar yaha body use kiya to sab jav=gah body hi use karna hai
+    req.barberId = token_decode.id; //  store on req, not req.body agar yaha body use kiya to sab jav=gah body hi use karna hai
     next();
   } catch (error) {
     console.log(error);

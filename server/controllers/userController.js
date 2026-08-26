@@ -107,7 +107,9 @@ const updateProfile = async (req, res) => {
 }
 // api to booking a slot
 // Yeh function client dwara appointment slot aur service book karne ke liye hai
-// Hindi Comment: Yeh modular function user ko appointment confirmation mail send karega
+//  Yeh modular function user ko appointment confirmation mail send karega
+// mail simple bhi rakh sakte hai but better looking mail ke liye html use kiya hai
+// file bada hogya hai lekin
 const sendConfirmationEmail = async (bookingData, bookingId) => {
   try {
     const mailOptions = {
@@ -316,7 +318,7 @@ const bookSlot = async (req, res) => {
     const selectedServiceObj = barberData.services.find(s => s._id.toString() === serviceId);
     const amount = selectedServiceObj ? selectedServiceObj.price : barberData.fees;
 
-    // Hindi Comment: Naya booking object banaya jisme paymentMethod store hoga
+    // Naya booking object banaya jisme paymentMethod store hoga
     const bookingData = {
       userId,
       barberId,
@@ -337,7 +339,7 @@ const bookSlot = async (req, res) => {
     // Barber ke slots ko database me reserve kiya
     await BarberModel.findByIdAndUpdate(barberId, { slots_booked })
 
-    // Hindi Comment: Agar paymentMethod Stripe hai, toh checkout session create karke URL return karenge
+    //  Agar paymentMethod Stripe hai, toh checkout session create karke URL return karenge
     if (paymentMethod === "Stripe") {
       const session = await stripeInstance.checkout.sessions.create({
         payment_method_types: ['card'],
@@ -369,7 +371,7 @@ const bookSlot = async (req, res) => {
       });
     }
 
-    // Hindi Comment: Cash booking ke liye confirmation mail turant bhejenge aur finish karenge
+    //  Cash booking ke liye confirmation mail turant bhejenge aur finish karenge
     await sendConfirmationEmail(bookingData, newBooking._id);
     res.json({ success: true, message: "Slot Booked Successfully" })
 
@@ -588,7 +590,7 @@ const cancelBooking = async (req, res) => {
   }
 };
 
-// Hindi Comment: Existing unpaid booking ke liye naya Stripe checkout session generate karne ka function
+//  Existing unpaid booking ke liye naya Stripe checkout session generate karne ka function
 const paymentStripe = async (req, res) => {
   try {
     const { bookingId } = req.body
@@ -628,7 +630,7 @@ const paymentStripe = async (req, res) => {
   }
 }
 
-// Hindi Comment: Stripe payment complete hone par transaction status verify karne ka function
+// Stripe payment complete hone par transaction status verify karne ka function
 const verifyStripe = async (req, res) => {
   try {
     const { bookingId, session_id } = req.body;

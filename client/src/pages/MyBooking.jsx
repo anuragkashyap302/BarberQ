@@ -40,7 +40,7 @@ const MyBooking = () => {
     }
     
   }
-  // Hindi Comment: Stripe checkout trigger karne ka function unpaid bookings ke liye
+  //  Stripe checkout trigger karne ka function unpaid bookings ke liye
   const bookingStripe = async (bookingId) => {
     try {
       const { data } = await axios.post(
@@ -60,7 +60,7 @@ const MyBooking = () => {
     }
   };
 
-  // Hindi Comment: Stripe payment verification handle karne ka function
+  //  Stripe payment verification handle karne ka function
   const verifyStripePayment = async (bookingId, sessionId) => {
     try {
       const { data } = await axios.post(
@@ -86,7 +86,7 @@ const MyBooking = () => {
 
   useEffect(() => {
     if (token) {
-      // Hindi Comment: URL params me check kar rahe hai Stripe redirected response
+      // URL params me check kar rahe hai Stripe redirected response
       const query = new URLSearchParams(window.location.search);
       const success = query.get("success");
       const cancel = query.get("cancel");

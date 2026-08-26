@@ -79,7 +79,7 @@ const Dashboard = () => {
               >
                 {/* Barber Info */}
                 <div className="flex items-center gap-3">
-                  {/* Hindi Comment: local key ko mapper dictionary se load kiya ya directly Cloudinary URL link retrieve kiya */}
+                  {/* local key ko mapper dictionary se load kiya ya directly Cloudinary URL link retrieve kiya */}
                   <img
                     src={barberImages[item.barberData.image] || item.barberData.image}
                     alt="barber"

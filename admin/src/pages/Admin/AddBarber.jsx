@@ -48,7 +48,7 @@ const AddBarber = () => {
     fetchServices();
   }, [backendURL]);
 
-  // ✅ Submit handler
+  //  Submit handler
   const handleSubmit = async (e) => {
     e.preventDefault();
    if(!barberImg){
@@ -175,7 +175,7 @@ const AddBarber = () => {
             />
           </div>
 
-          {/* Password */}
+          {/* Password abhi ke sab ka barber123 hai hashed hai likein*/}
           <div className="relative">
             <label className="block text-sm font-medium text-gray-300 mb-1.5 flex items-center gap-1.5">
               <Lock size={16} className="text-pink-400" />

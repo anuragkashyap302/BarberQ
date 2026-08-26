@@ -1,5 +1,6 @@
 import React from "react";
 import { assets } from "../assets/assets"; // make sure your logo is here
+import { PhoneCall , Envolope, MapPin } from "lucide-react"
 
 const Footer = () => {
   return (
@@ -36,9 +37,9 @@ const Footer = () => {
         <div>
           <h3 className="text-lg font-semibold mb-4">Get in Touch</h3>
           <ul className="space-y-2 text-gray-300">
-            <li>📞 598495830958</li>
-            <li>📧 contact@barberq.com</li>
-            <li>📍 123 Barber Street, Grooming City</li>
+            <li><PhoneCall className="inline mr-2 text-green-400" /> 7667033488</li>
+            <li><Envolope className="inline mr-2 text-green-400" /> contat@barberq.com</li>
+            <li><MapPin className="inline mr-2 text-green-400" /> 123 Barber Street, Grooming City</li>
           </ul>
         </div>
 

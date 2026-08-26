@@ -4,7 +4,7 @@ import { assets } from '../assets/assets'
 const Header = () => {
   return (
     <div className='relative h-screen bg-[url("/herobg3.jpg")] bg-cover bg-center'>
-      {/* Dark overlay */}
+      {/* Dark overlay agar hero image ko dark karna ho tab use karenge isko comment se hatana hoga */}
       <div className='absolute inset-0 '></div>
       {/* <div className='absolute inset-0 bg-gradient-to-r from-black/85 via-black/60 to-black/40'></div> */}
       {/* Content */}
