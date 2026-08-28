@@ -4,10 +4,14 @@ import './index.css'
 import App from './App.jsx'
 import {BrowserRouter} from 'react-router-dom'
 import AppContextProvider from './context/AppContext.jsx'
+import { SocketContextProvider } from './context/SocketContext.jsx' // Socket wrapper import kiya
+
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
     <AppContextProvider>
+      <SocketContextProvider>
         <App />
+      </SocketContextProvider>
     </AppContextProvider>
   </BrowserRouter>
 )

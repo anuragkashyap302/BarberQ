@@ -1,13 +1,22 @@
 import React, { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom"; // useNavigate import kiya
 import { AppContext } from "../context/AppContext";
 import { toast } from "react-toastify";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import { barberImages } from "../assets/assets";
+import QueueTracker from "../components/QueueTracker"; // QueueTracker component import kiya
+import ChatDrawer from "../components/ChatDrawer"; // ChatDrawer component import kiya
+
 const MyBooking = () => {
-  const { backendURL , token,getBarbersData } = useContext(AppContext);
+  const { backendURL , token, getBarbersData, userData } = useContext(AppContext);
   const [bookings, setBookings] = useState([])
   const navigate = useNavigate();
+
+  // Chat drawer visibility aur configuration state parameters
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [chatBookingId, setChatBookingId] = useState("");
+  const [chatBarberId, setChatBarberId] = useState("");
+  const [chatBarberName, setChatBarberName] = useState("");
   const getUserBookings = async()=>{
     try {
        const {data} = await axios.get(backendURL + '/api/user/bookings' , {headers:{token}})
@@ -117,131 +126,173 @@ const MyBooking = () => {
         {bookings.map((item, index) => (
           <div
             key={index}
-            className="flex flex-col sm:flex-row bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl overflow-hidden hover:border-pink-500/30 transition-all duration-300 shadow-md hover:shadow-lg hover:shadow-pink-500/5"
+            className="flex flex-col bg-slate-900/60 backdrop-blur-md border border-white/10 rounded-3xl overflow-hidden hover:border-pink-500/30 transition-all duration-300 shadow-md hover:shadow-lg hover:shadow-pink-500/5 relative p-6 space-y-4"
           >
-            {/* Left: Image Container */}
-            <div className="relative w-full sm:w-44 h-48 sm:h-auto flex-shrink-0 overflow-hidden bg-white/5">
-              <img
-                src={barberImages[item.barberData.image] || item.barberData.image}
-                alt={item.barberData.name}
-                className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-              />
-            </div>
+            {/* Header: Circle Avatar & Barber Name / Details */}
+            <div className="flex items-center gap-4 border-b border-white/5 pb-4">
+              {/* Circle Avatar with Shadow Glow */}
+              <div className="relative flex-shrink-0">
+                <div className="absolute inset-0 bg-pink-500/25 blur-lg rounded-full scale-90"></div>
+                <img
+                  src={barberImages[item.barberData.image] || item.barberData.image}
+                  alt={item.barberData.name}
+                  className="w-16 h-16 rounded-full object-cover border-2 border-pink-500/20 shadow-[0_0_15px_rgba(236,72,153,0.3)] hover:scale-105 transition-transform duration-300 relative z-10"
+                />
+              </div>
 
-            {/* Right: Info Container */}
-            <div className="flex flex-col justify-between flex-grow p-5 space-y-4">
-              {/* Upper Section */}
-              <div className="space-y-2.5">
-                {/* Header: Name and Status */}
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <h3 className="text-lg font-bold text-white tracking-wide">
-                      {item.barberData.name}
-                    </h3>
-                    {/* Rating & Exp */}
-                    <div className="flex items-center gap-1 text-xs text-amber-400 mt-0.5">
-                      <span>★</span>
-                      <span className="text-gray-300">{item.barberData.rating || "4.5"}</span>
-                      <span className="text-gray-500">•</span>
-                      <span className="text-gray-400 font-light">{item.barberData.experience} Exp</span>
-                    </div>
-                  </div>
-
+              {/* Barber Name and Rating */}
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-bold text-white tracking-wide truncate">
+                    {item.barberData.name}
+                  </h3>
                   {/* Status Badge */}
                   <div>
                     {item.cancelled && (
-                      <span className="inline-flex items-center gap-1 bg-red-500/10 border border-red-500/20 text-red-400 text-xs px-2.5 py-1 rounded-full font-semibold">
-                        <span className="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+                      <span className="inline-flex items-center gap-1 bg-red-500/10 border border-red-500/20 text-red-400 text-[10px] px-2.5 py-0.5 rounded-full font-semibold">
                         Cancelled
                       </span>
                     )}
                     {item.isCompleted && (
-                      <span className="inline-flex items-center gap-1 bg-green-500/10 border border-green-500/20 text-green-400 text-xs px-2.5 py-1 rounded-full font-semibold">
-                        <span className="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                      <span className="inline-flex items-center gap-1 bg-green-500/10 border border-green-500/20 text-green-400 text-[10px] px-2.5 py-0.5 rounded-full font-semibold">
                         Completed
                       </span>
                     )}
                     {!item.cancelled && !item.isCompleted && item.payment && (
-                      <span className="inline-flex items-center gap-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs px-2.5 py-1 rounded-full font-semibold">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                      <span className="inline-flex items-center gap-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] px-2.5 py-0.5 rounded-full font-semibold">
                         Paid
                       </span>
                     )}
                     {!item.cancelled && !item.isCompleted && !item.payment && (
-                      <span className="inline-flex items-center gap-1 bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs px-2.5 py-1 rounded-full font-semibold">
-                        <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                      <span className="inline-flex items-center gap-1 bg-amber-500/10 border border-amber-500/20 text-amber-400 text-[10px] px-2.5 py-0.5 rounded-full font-semibold">
                         {item.paymentMethod === 'Cash' ? "Pay at Salon" : "Unpaid"}
                       </span>
                     )}
                   </div>
                 </div>
 
-                {/* Service */}
-                <div className="flex items-center gap-2 text-sm">
-                  <svg className="w-4 h-4 text-pink-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.121 14.121L19 19m-7-7l7-7m-7 7a3 3 0 11-6 0 3 3 0 016 0zm-3 12a3 3 0 100-6 3 3 0 000 6z"></path>
-                  </svg>
-                  <span className="text-gray-300">
-                    <span className="text-pink-400 font-medium">Service:</span>{" "}
-                    {item.serviceName || (Array.isArray(item.barberData.services) ? item.barberData.services.map(s => s.name).join(", ") : item.barberData.services)}
-                  </span>
-                </div>
-
-                {/* Slot Date & Time */}
-                <div className="flex items-center gap-2 text-sm">
-                  <svg className="w-4 h-4 text-pink-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                  </svg>
-                  <span className="text-gray-300">
-                    <span className="text-pink-300 font-medium">Date & Time:</span> {item.slotDate} | {item.slotTime}
-                  </span>
-                </div>
-
-                {/* Address */}
-                <div className="flex items-start gap-2 text-sm text-gray-400">
-                  <svg className="w-4 h-4 text-gray-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                  </svg>
-                  <span className="leading-tight font-light">
-                    {item.barberData.address.line1}, {item.barberData.address.line2}
-                  </span>
+                <div className="flex items-center gap-1.5 text-xs text-amber-400 mt-1">
+                  <span>★</span>
+                  <span className="text-gray-300 font-bold">{item.barberData.rating || "4.5"}</span>
+                  <span className="text-gray-500">•</span>
+                  <span className="text-gray-400 font-light">{item.barberData.experience} Exp</span>
                 </div>
               </div>
+            </div>
 
-              {/* Lower Section: Price & Actions */}
-              <div className="flex items-center justify-between gap-4 pt-3.5 border-t border-white/5">
-                <div>
-                  <p className="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">Total Price</p>
-                  <p className="text-xl font-extrabold text-pink-400">₹{item.amount || item.barberData.fees}</p>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  {/* Pay Online */}
-                  {!item.cancelled && !item.payment && !item.isCompleted && item.paymentMethod === 'Stripe' && (
-                    <button
-                      onClick={() => bookingStripe(item._id)}
-                      className="px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-semibold rounded-xl text-sm shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer"
-                    >
-                      Pay Online
-                    </button>
-                  )}
-
-                  {/* Cancel Booking */}
-                  {!item.cancelled && !item.isCompleted && (
-                    <button
-                      onClick={() => cancelBooking(item._id)}
-                      className="px-3.5 py-2 bg-white/5 hover:bg-red-500/10 border border-white/10 hover:border-red-500/30 text-gray-300 hover:text-red-400 font-semibold rounded-xl text-sm transition-all duration-300 cursor-pointer"
-                    >
-                      Cancel
-                    </button>
-                  )}
-                </div>
+            {/* Middle Section: Clean 2x2 Grid of Appointment Details */}
+            <div className="grid grid-cols-2 gap-x-4 gap-y-3 py-1">
+              {/* Service */}
+              <div className="flex items-center gap-2 text-xs">
+                <svg className="w-4 h-4 text-pink-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.121 14.121L19 19m-7-7l7-7m-7 7a3 3 0 11-6 0 3 3 0 016 0zm-3 12a3 3 0 100-6 3 3 0 000 6z"></path>
+                </svg>
+                <span className="text-gray-300 truncate">
+                  <span className="text-gray-500 font-medium mr-1">Service:</span>
+                  {item.serviceName || "Styling"}
+                </span>
               </div>
+
+              {/* Date */}
+              <div className="flex items-center gap-2 text-xs">
+                <svg className="w-4 h-4 text-pink-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+                <span className="text-gray-300 truncate">
+                  <span className="text-gray-500 font-medium mr-1">Date:</span>
+                  {item.slotDate}
+                </span>
+              </div>
+
+              {/* Time */}
+              <div className="flex items-center gap-2 text-xs">
+                <svg className="w-4 h-4 text-pink-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span className="text-gray-300 truncate">
+                  <span className="text-gray-500 font-medium mr-1">Time:</span>
+                  {item.slotTime}
+                </span>
+              </div>
+
+              {/* Price */}
+              <div className="flex items-center gap-2 text-xs">
+                <svg className="w-4 h-4 text-pink-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span className="text-gray-300 truncate">
+                  <span className="text-gray-500 font-medium mr-1">Price:</span>
+                  <span className="text-pink-400 font-extrabold">₹{item.amount}</span>
+                </span>
+              </div>
+            </div>
+
+            {/* Address */}
+            <div className="flex items-start gap-2 text-xs text-gray-400 bg-white/5 border border-white/5 p-3 rounded-2xl">
+              <svg className="w-4 h-4 text-pink-400/70 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              </svg>
+              <span className="leading-relaxed font-light">
+                {item.barberData.address.line1}, {item.barberData.address.line2}
+              </span>
+            </div>
+
+            {/* Real-time queue tracker display (Renders internally only when waiting/active) */}
+            <QueueTracker bookingId={item._id} barberId={item.barberId} />
+
+            {/* Lower Section: Action Buttons */}
+            <div className="flex items-center justify-end gap-2 pt-3 border-t border-white/5">
+              {/* Pay Online */}
+              {!item.cancelled && !item.payment && !item.isCompleted && item.paymentMethod === 'Stripe' && (
+                <button
+                  onClick={() => bookingStripe(item._id)}
+                  className="px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 hover:shadow-[0_0_15px_rgba(16,185,129,0.2)] text-white font-bold rounded-xl text-xs transition-all duration-300 cursor-pointer"
+                >
+                  Pay Online
+                </button>
+              )}
+
+              {/* Chat Button */}
+              {!item.cancelled && !item.isCompleted && (
+                <button
+                  onClick={() => {
+                    setChatBookingId(item._id);
+                    setChatBarberId(item.barberId);
+                    setChatBarberName(item.barberData.name);
+                    setIsChatOpen(true);
+                  }}
+                  className="px-4 py-2 bg-pink-500 hover:bg-pink-600 hover:shadow-[0_0_15px_rgba(236,72,153,0.3)] text-white font-bold rounded-xl text-xs transition-all duration-300 cursor-pointer"
+                >
+                  Chat
+                </button>
+              )}
+
+              {/* Cancel Button */}
+              {!item.cancelled && !item.isCompleted && (
+                <button
+                  onClick={() => cancelBooking(item._id)}
+                  className="px-4 py-2 bg-white/5 hover:bg-red-500/10 border border-white/10 hover:border-red-500/30 text-gray-300 hover:text-red-400 font-bold rounded-xl text-xs transition-all duration-300 cursor-pointer"
+                >
+                  Cancel
+                </button>
+              )}
             </div>
           </div>
         ))}
       </div>
+
+      {/* Dynamic real-time in-app messages drawer display */}
+      {userData && (
+        <ChatDrawer
+          isOpen={isChatOpen}
+          onClose={() => setIsChatOpen(false)}
+          bookingId={chatBookingId}
+          barberId={chatBarberId}
+          barberName={chatBarberName}
+          senderId={userData._id}
+        />
+      )}
     </div>
   );
 };

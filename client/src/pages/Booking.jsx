@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
+import { SocketContext } from "../context/SocketContext"; // Socket context import kiya
 import { toast } from "react-toastify";
 import axios from "axios";
 import { barberImages } from "../assets/assets";
@@ -9,8 +10,9 @@ const Booking = () => {
   const { barberId } = useParams();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { barbers, backendURL, token, getBarbersData,userData } =
+  const { barbers, backendURL, token, getBarbersData, userData } =
     useContext(AppContext);
+  const socket = useContext(SocketContext); // Sockets instance call kiya
 
   const [barberSlots, setBarberSlots] = useState([]);
   const [dayIndex, setDayIndex] = useState(0);
@@ -18,6 +20,24 @@ const Booking = () => {
   const [selectedService, setSelectedService] = useState(null);
   // Payment method ke status ko track karne ke liye state (Cash or Stripe)
   const [paymentMethod, setPaymentMethod] = useState("Cash");
+
+  // WebSockets room connection aur real-time listener setup kiya
+  useEffect(() => {
+    if (socket && barberId) {
+      // Room join event backend pe transmit kiya
+      socket.emit("join_barber_room", barberId);
+
+      // Listening for slot booking/releasing events dynamically
+      socket.on("slot_update", (data) => {
+        // console.log("Realtime slot update notification:", data);
+        getBarbersData(); // Barber slot values refresh list
+      });
+
+      return () => {
+        socket.off("slot_update");
+      };
+    }
+  }, [socket, barberId]);
 
   const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -460,20 +480,30 @@ const Booking = () => {
                   {/* Time slots pills */}
                   <div className="flex flex-wrap gap-2.5">
                     {barberSlots[dayIndex]?.slots.length > 0 ? (
-                      barberSlots[dayIndex]?.slots.map((slot, i) => (
-                        <button
-                          key={i}
-                          onClick={() => setSelectedSlot(slot)}
-                          className={`px-4 py-2 rounded-xl border text-sm font-medium transition-all duration-300 cursor-pointer
-                            ${
-                              selectedSlot?.time === slot.time
-                                ? "bg-pink-500 text-white border-pink-500 shadow-md shadow-pink-500/10 scale-105"
-                                : "bg-white/5 border-white/10 text-gray-300 hover:bg-white/10"
-                            }`}
-                        >
-                          {slot.time}
-                        </button>
-                      ))
+                      barberSlots[dayIndex]?.slots.map((slot, i) => {
+                        // Current day ke dynamic format date string (d-m-yyyy) ko construct kiya check karne ke liye
+                        const date = barberSlots[dayIndex].date;
+                        const slotDate = `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
+                        const isBooked = barber.slots_booked?.[slotDate]?.includes(slot.time);
+
+                        return (
+                          <button
+                            key={i}
+                            disabled={isBooked}
+                            onClick={() => setSelectedSlot(slot)}
+                            className={`px-4 py-2 rounded-xl border text-sm font-medium transition-all duration-300 cursor-pointer
+                              ${
+                                isBooked
+                                  ? "bg-red-500/10 border-red-500/20 text-red-500/40 cursor-not-allowed opacity-50 select-none"
+                                  : selectedSlot?.time === slot.time
+                                  ? "bg-pink-500 text-white border-pink-500 shadow-md shadow-pink-500/10 scale-105"
+                                  : "bg-white/5 border-white/10 text-gray-300 hover:bg-white/10"
+                              }`}
+                          >
+                            {slot.time}
+                          </button>
+                        );
+                      })
                     ) : (
                       <p className="text-gray-400 text-sm italic py-2">No time slots available for this date.</p>
                     )}

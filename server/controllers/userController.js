@@ -6,6 +6,7 @@ import jwt from 'jsonwebtoken'
 import { v2 as cloudinary } from 'cloudinary'
 import bookingModel from '../models/bookingModel.js';
 import BarberModel from '../models/barbermodel.js';
+import messageModel from '../models/messageModel.js'; // messageModel import kiya
 import Stripe from 'stripe'; // Stripe SDK import kiya online payment ke liye
 import dotenv from 'dotenv';
 import transporter from "../config/nodemailer.js";
@@ -296,24 +297,26 @@ const sendConfirmationEmail = async (bookingData, bookingId) => {
 const bookSlot = async (req, res) => {
   try {
     const { userId, barberId, slotDate, slotTime, serviceId, serviceName, paymentMethod } = req.body;
-    const barberData = await BarberModel.findById(barberId).select("-password").populate("services")
-    if (!barberData.available) {
-      return res.json({ success: false, message: "Barber is not available" })
+
+    // Concurrency double booking aur race condition prevent karne ke liye MongoDB atomic update query run kiya.
+    // Query check karega ki target barber available hai aur slot array me present nahi hai.
+    const barberData = await BarberModel.findOneAndUpdate(
+      {
+        _id: barberId,
+        available: true,
+        [`slots_booked.${slotDate}`]: { $ne: slotTime }
+      },
+      {
+        $push: { [`slots_booked.${slotDate}`]: slotTime }
+      },
+      { new: true }
+    ).select("-password").populate("services");
+
+    if (!barberData) {
+      return res.json({ success: false, message: "Slot is already booked or Barber is not available" });
     }
-    let slots_booked = barberData.slots_booked;
-    // check if the slot is already booked
-    if (slots_booked[slotDate]) {
-      if (slots_booked[slotDate].includes(slotTime)) {
-        return res.json({ success: false, message: "Slot is already booked" })
-      } else {
-        slots_booked[slotDate].push(slotTime)
-      }
-    } else {
-      slots_booked[slotDate] = []
-      slots_booked[slotDate].push(slotTime)
-    }
+
     const userData = await UserModel.findById(userId).select("-password")
-    delete barberData.slots_booked
 
     const selectedServiceObj = barberData.services.find(s => s._id.toString() === serviceId);
     const amount = selectedServiceObj ? selectedServiceObj.price : barberData.fees;
@@ -336,8 +339,16 @@ const bookSlot = async (req, res) => {
     const newBooking = new bookingModel(bookingData)
     await newBooking.save()
 
-    // Barber ke slots ko database me reserve kiya
-    await BarberModel.findByIdAndUpdate(barberId, { slots_booked })
+    // Realtime notification send kiya socket connection pe: target barber's room update and slot lock state
+    req.io.to(`barber_${barberId}`).emit('slot_update', { slotDate, slotTime, action: 'book' });
+
+    // Barber dashboard pe sound play & new booking alert notification trigger karne ke liye message send kiya
+    req.io.to(`barber_${barberId}`).emit('new_booking_alert', {
+      bookingId: newBooking._id,
+      userName: userData.name,
+      slotDate,
+      slotTime
+    });
 
     //  Agar paymentMethod Stripe hai, toh checkout session create karke URL return karenge
     if (paymentMethod === "Stripe") {
@@ -411,16 +422,18 @@ const cancelBooking = async (req, res) => {
 
     await bookingModel.findByIdAndUpdate(bookingId, { cancelled: true });
 
-    // resling barber slots_booked
+    // Resling/releasing barber slots_booked atomically with MongoDB $pull operator
     const { barberId, slotDate, slotTime } = bookingData;
-    const barberData = await BarberModel.findById(barberId);
 
-    if (barberData && barberData.slots_booked[slotDate]) {
-      let slots_booked = barberData.slots_booked;
-      slots_booked[slotDate] = slots_booked[slotDate].filter(slot => slot !== slotTime);
+    await BarberModel.findByIdAndUpdate(barberId, {
+      $pull: { [`slots_booked.${slotDate}`]: slotTime }
+    });
 
-      await BarberModel.findByIdAndUpdate(barberId, { slots_booked });
-    }
+    // Realtime slot release push notifications trigger kiya taaki slot dynamic lock release state update ho sabhi clients pe
+    req.io.to(`barber_${barberId}`).emit('slot_update', { slotDate, slotTime, action: 'release' });
+
+    // Live queue tracking data update karne ke liye request push kiya
+    req.io.to(`barber_${barberId}`).emit('queue_update');
     const mailOptions = {
       from: process.env.SENDER_EMAIL,
       to: userData.email,
@@ -657,4 +670,94 @@ const verifyStripe = async (req, res) => {
   }
 }
 
-export { registerUser, loginUser, getProfile, updateProfile, bookSlot, listBookings, cancelBooking, paymentStripe, verifyStripe }
+
+// Dynamic queue position calculate karne ke liye api endpoint function banaya
+const getQueuePosition = async (req, res) => {
+  try {
+    const { bookingId } = req.params;
+    const booking = await bookingModel.findById(bookingId);
+    if (!booking) {
+      return res.json({ success: false, message: "Booking not found" });
+    }
+
+    // Agar completed or cancelled hai toh position zero return kiya
+    if (booking.isCompleted || booking.cancelled) {
+      return res.json({
+        success: true,
+        position: 0,
+        peopleAhead: 0,
+        estimatedWaitTime: 0,
+        status: booking.isCompleted ? 'Completed' : 'Cancelled'
+      });
+    }
+
+    // Same day aur same barber ke pending active appointments list fetch kiya
+    const activeBookings = await bookingModel.find({
+      barberId: booking.barberId,
+      slotDate: booking.slotDate,
+      cancelled: false,
+      isCompleted: false
+    });
+
+    // Time slots formats ko minutes count base transform parser helper helper
+    const parseTime = (timeStr) => {
+      const cleanTime = timeStr.trim();
+      const modifierMatch = cleanTime.match(/(AM|PM)/i);
+      const modifier = modifierMatch ? modifierMatch[0].toUpperCase() : null;
+
+      const numericalPart = cleanTime.replace(/(AM|PM)/i, '').trim();
+      let [hours, minutes] = numericalPart.split(':');
+      hours = parseInt(hours, 10);
+      minutes = parseInt(minutes, 10);
+
+      if (modifier) {
+        if (modifier === 'PM' && hours < 12) hours += 12;
+        if (modifier === 'AM' && hours === 12) hours = 0;
+      }
+      return hours * 60 + minutes;
+    };
+
+    // Active bookings list sort kiya time scale comparison se
+    activeBookings.sort((a, b) => parseTime(a.slotTime) - parseTime(b.slotTime));
+
+    // Booking का current position (index) identify
+    const currentIndex = activeBookings.findIndex(b => b._id.toString() === bookingId);
+
+    if (currentIndex === -1) {
+      return res.json({ success: true, position: 1, peopleAhead: 0, estimatedWaitTime: 0, status: 'Waiting' });
+    }
+
+    // Average duration mapping (default 30 mins) ke basis par waiting time estimation.
+    let estimatedWaitTime = 0;
+    for (let i = 0; i < currentIndex; i++) {
+      estimatedWaitTime += 30; // 30 mins per appointment styling average time standard
+    }
+
+    res.json({
+      success: true,
+      position: currentIndex + 1,
+      peopleAhead: currentIndex,
+      estimatedWaitTime,
+      status: 'Waiting'
+    });
+
+  } catch (error) {
+    console.log("Error in getQueuePosition:", error);
+    res.json({ success: false, message: error.message });
+  }
+}
+
+
+// Chat history fetch karne ke liye endpoint function banaya
+const getChatHistory = async (req, res) => {
+  try {
+    const { bookingId } = req.params;
+    const messages = await messageModel.find({ bookingId }).sort({ timestamp: 1 });
+    res.json({ success: true, messages });
+  } catch (error) {
+    console.log("Error in getChatHistory:", error);
+    res.json({ success: false, message: error.message });
+  }
+}
+
+export { registerUser, loginUser, getProfile, updateProfile, bookSlot, listBookings, cancelBooking, paymentStripe, verifyStripe, getQueuePosition, getChatHistory }

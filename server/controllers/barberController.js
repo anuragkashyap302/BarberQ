@@ -71,37 +71,48 @@ const barberLogin = async (req, res) => {
         const booking = await bookingModel.findById(bookingId)
         if(booking && booking.barberId == barberId){ 
             await bookingModel.findByIdAndUpdate(bookingId, { isCompleted: true });
+
+            // Queue status realtime dashboard updating ke liye notification check kiya
+            req.io.to(`barber_${barberId}`).emit('queue_update');
+
             return res.json({ success: true, message: "Booking  Completed" });
         }else{
             return res.json({ success: false, message: "Mark Falied" });
         }
-
-
-        
     } catch (error) {
         console.log(error);
         res.json({ success: false, message: error.message });
-        
     }
  }
-  const CancelBooking = async (req, res) => {
+
+ const CancelBooking = async (req, res) => {
     try {
         const barberId = req.barberId;
         const { bookingId} = req.body;
         const booking = await bookingModel.findById(bookingId)
         if(booking && booking.barberId == barberId){ 
             await bookingModel.findByIdAndUpdate(bookingId, { cancelled: true });
+
+            // Slots ko dynamically pull (release) karne ke liye query update context run kiya
+            await BarberModel.findByIdAndUpdate(barberId, {
+                $pull: { [`slots_booked.${booking.slotDate}`]: booking.slotTime }
+            });
+
+            // Sockets event emit kiya slot release and queue positions recalculate karne ke liye
+            req.io.to(`barber_${barberId}`).emit('slot_update', { 
+                slotDate: booking.slotDate, 
+                slotTime: booking.slotTime, 
+                action: 'release' 
+            });
+            req.io.to(`barber_${barberId}`).emit('queue_update');
+
             return res.json({ success: true, message: "Booking  Cancelled" });
         }else{
             return res.json({ success: false, message: "Cancelation Falied" });
         }
-
-
-        
     } catch (error) {
         console.log(error);
         res.json({ success: false, message: error.message });
-        
     }
  }
 
