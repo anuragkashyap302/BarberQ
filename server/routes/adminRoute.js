@@ -5,11 +5,14 @@ import authAdmin from '../middlewares/authAdmin.js';
 import { changeAvailability } from '../controllers/barberController.js';
 
 
+import { authLimiter } from '../middlewares/rateLimiter.js';
+
 const adminRouter = express.Router();
 
 adminRouter.post('/add-barber',authAdmin , upload.single('image'), addBarber);
 adminRouter.post('/add-service', authAdmin, addService);
-adminRouter.post('/login', loginAdmin);
+// Hindi Comment: Admin login endpoint pe brute-force prevention ke liye rate limiter lagaya
+adminRouter.post('/login', authLimiter, loginAdmin);
 adminRouter.post('/all-barbers',authAdmin, allBarbers)
 adminRouter.post('/change-availability', authAdmin, changeAvailability);
 adminRouter.get('/all-bookings', authAdmin,  bookingsAdmin);

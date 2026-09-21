@@ -4,12 +4,18 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import bookingModel from "../models/bookingModel.js";
 import ServiceModel from "../models/serviceModel.js";
+import { deleteKeysByPattern } from "../config/redis.js"; // Redis cache eviction helper
+
 const changeAvailability = async (req, res) => {
     try {
         const { barberId } = req.body;
 
         const barber = await BarberModel.findById(barberId);
         await BarberModel.findByIdAndUpdate(barberId, { available: !barber.available });
+
+        // Cache Invalidation: Barber ki availability badli hai, isliye cached list ko delete kiya taaki user ko fresh data mile
+        await deleteKeysByPattern('barbers_list:*');
+
         res.json({ success: true, message: "Barber availability updated successfully" });
     } catch (error) {
         console.log(error);
@@ -169,6 +175,10 @@ const updateBarberProfile =  async (req , res)=>{
         const barberId = req.barberId;
         const { name,  experience, fees, about, address ,available} = req.body;
         await BarberModel.findByIdAndUpdate(barberId,{name,fees ,experience,about, address , available})
+
+        // Cache Invalidation: Barber profile update hua hai, cached barber list delete kiya
+        await deleteKeysByPattern('barbers_list:*');
+
         res.json({success:true , message: "Profile Updated"})
      } catch (error) {
          console.log(error);

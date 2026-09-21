@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 
-// Chat messages store karne ke liye schema banaya hai
 const messageSchema = new mongoose.Schema({
     // Kisne message bheja (UserId ya BarberId)
     senderId: { type: String, required: true },
@@ -17,6 +16,9 @@ const messageSchema = new mongoose.Schema({
     // Message kab bheja gaya (timestamps help sort messages chronologically)
     timestamp: { type: Date, default: Date.now }
 });
+
+// Database indexing: Chat messages ko bookingId ke basis par chronologically superfast fetch karne ke liye index
+messageSchema.index({ bookingId: 1, timestamp: 1 });
 
 const messageModel = mongoose.models.message || mongoose.model('message', messageSchema);
 export default messageModel;

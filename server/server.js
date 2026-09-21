@@ -4,12 +4,17 @@ import bodyParser from 'body-parser';
 import dotenv from 'dotenv/config';
 import http from 'http'; // HTTP server use kiya Socket.io attach karne ke liye
 import { Server } from 'socket.io'; // Socket.io server class import kiya
+import helmet from 'helmet'; // HTTP Security Headers ke liye Helmet import kiya
+import morgan from 'morgan'; // HTTP request logging ke liye Morgan import kiya
+import logger from './config/logger.js'; // Winston structured logger import kiya
 import connectDB from './config/mongodb.js';
 import connectCloudinary from './config/cloudinary.js';
 import adminRouter from './routes/adminRoute.js';
 import barberRouter from './routes/barberRoute.js';
 import userRouter from './routes/userRoute.js';
 import messageModel from './models/messageModel.js'; // Messages persist karne ke liye
+import { generalLimiter } from './middlewares/rateLimiter.js'; // Express Rate Limiter
+import errorHandler from './middlewares/errorHandler.js'; // Centralized Error Handler
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -17,8 +22,18 @@ const port = process.env.PORT || 4000;
 // HTTP server ko express app wrap karke banaya hai
 const server = http.createServer(app);
 
-connectDB();
-connectCloudinary();
+// Hindi Comment: Non-test environment me hi database aur Cloudinary initialize karenge
+if (process.env.NODE_ENV !== 'test') {
+  connectDB();
+  connectCloudinary();
+}
+
+// Hindi Comment: Helmet security headers configure kiya (XSS protection, MIME sniffing prevention, frameguard)
+// crossOriginResourcePolicy: false rakha taaki Cloudinary aur external assets smoothly render hon
+app.use(helmet({
+  crossOriginResourcePolicy: false,
+  crossOriginEmbedderPolicy: false,
+}));
 
 // CORS configuration for both local and production URLs
 const allowedOrigins = [
@@ -36,7 +51,13 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'token', 'aToken', 'bToken'],
 }));
 
+// Hindi Comment: Morgan HTTP logger ko Winston ke stream adapter ke sath connect kiya
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms', { stream: logger.stream }));
+
 app.use(express.json());
+
+// Hindi Comment: Sabhi API routes pe standard rate limiter apply kiya DoS attack prevention ke liye
+app.use('/api', generalLimiter);
 
 // Socket.io instance create kiya CORS allowed properties ke sath
 const io = new Server(server, {
@@ -55,18 +76,18 @@ app.use((req, res, next) => {
 
 // Socket connectivity event logic
 io.on('connection', (socket) => {
-  console.log('A user connected via socket:', socket.id);
+  logger.info(`[Socket] User connected with socket ID: ${socket.id}`);
 
   // Client ya barber dynamic room join karta hai using Barber ID
   socket.on('join_barber_room', (barberId) => {
     socket.join(`barber_${barberId}`);
-    console.log(`Socket ID: ${socket.id} joined barber_${barberId} room`);
+    logger.info(`[Socket] Socket ID: ${socket.id} joined barber_${barberId} room`);
   });
 
   // Client ya barber chat room join karte hai (linked via bookingId)
   socket.on('join_chat_room', (bookingId) => {
     socket.join(`chat_${bookingId}`);
-    console.log(`Socket ID: ${socket.id} joined chat_${bookingId} room`);
+    logger.info(`[Socket] Socket ID: ${socket.id} joined chat_${bookingId} room`);
   });
 
   // Realtime in-app direct messaging handler
@@ -85,12 +106,12 @@ io.on('connection', (socket) => {
       // Broadcast the message back to client and barber room
       io.to(`chat_${bookingId}`).emit('receive_message', newMsg);
     } catch (err) {
-      console.log('Socket message save failed:', err.message);
+      logger.error(`[Socket] Message save failed: ${err.message}`);
     }
   });
 
   socket.on('disconnect', () => {
-    console.log('A user disconnected:', socket.id);
+    logger.info(`[Socket] User disconnected: ${socket.id}`);
   });
 });
 
@@ -103,7 +124,15 @@ app.get('/', (req, res) => {
   res.send('Api is Working Fine!');
 });
 
-// Important: Express app.listen key jagah server.listen call kiya socket listener active karne ke liye
-server.listen(port, () => {
-  console.log('Server is running on PORT:', port);
-});
+// Hindi Comment: Centralized error handling middleware ko sabhi routes ke baad mount kiya
+app.use(errorHandler);
+
+// Hindi Comment: Non-test mode me hi server port listen karega taaki Jest tests ke sath port conflict na ho
+if (process.env.NODE_ENV !== 'test') {
+  server.listen(port, () => {
+    logger.info(`Server is running successfully on PORT: ${port}`);
+  });
+}
+
+export { app, server };
+export default app;

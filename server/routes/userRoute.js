@@ -3,13 +3,16 @@ import { registerUser, loginUser, getProfile, updateProfile, bookSlot, listBooki
 import authUser from "../middlewares/authUser.js";
 import upload from "../middlewares/multer.js";
 
+import { authLimiter, bookingLimiter } from "../middlewares/rateLimiter.js";
+
 const userRouter = express.Router();
 
-userRouter.post("/register", registerUser);
-userRouter.post("/login", loginUser);
+// Hindi Comment: Rate limiter attach kiya credential brute force aur slot spamming rokne ke liye
+userRouter.post("/register", authLimiter, registerUser);
+userRouter.post("/login", authLimiter, loginUser);
 userRouter.get("/get-profile", authUser, getProfile);
 userRouter.post("/update-profile", upload.single("image"), authUser, updateProfile);
-userRouter.post("/book-slot", authUser, bookSlot);
+userRouter.post("/book-slot", authUser, bookingLimiter, bookSlot);
 userRouter.get('/bookings', authUser, listBookings);
 userRouter.post('/cancel-booking', authUser, cancelBooking);
 

@@ -1,0 +1,99 @@
+# ==============================================================================
+# BarberQ Full Stack Multi-Container Orchestration (Docker Compose)
+# Coordinates: Redis Cache, Express Backend Server, React Client, and Admin Panel
+# ==============================================================================
+
+version: '3.8'
+
+services:
+  # ----------------------------------------------------------------------------
+  # 1. In-Memory Cache Service (Redis)
+  # ----------------------------------------------------------------------------
+  redis:
+    image: redis:7-alpine
+    container_name: barberq-redis-container
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      # Data persist karne ke liye named volume attach kiya
+      - redis_data:/data
+    networks:
+      - barberq-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ----------------------------------------------------------------------------
+  # 2. Node.js + Express + Socket.io Backend Server
+  # ----------------------------------------------------------------------------
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: barberq-backend-server
+    restart: unless-stopped
+    ports:
+      - "4000:4000"
+    environment:
+      - PORT=4000
+      - NODE_ENV=production
+      # Local docker network ke andar Redis service ka direct URL
+      - REDIS_URI=redis://redis:6379
+    env_file:
+      # MongoDB Atlas, Stripe aur Cloudinary credentials .env se load honge
+      - ./server/.env
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - barberq-network
+
+  # ----------------------------------------------------------------------------
+  # 3. Customer Web Application (React + Vite)
+  # ----------------------------------------------------------------------------
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: barberq-client-app
+    restart: unless-stopped
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_BACKEND_URL=http://localhost:4000
+    depends_on:
+      - server
+    networks:
+      - barberq-network
+
+  # ----------------------------------------------------------------------------
+  # 4. Admin & Barber Management Dashboard (React + Vite)
+  # ----------------------------------------------------------------------------
+  admin:
+    build:
+      context: ./admin
+      dockerfile: Dockerfile
+    container_name: barberq-admin-dashboard
+    restart: unless-stopped
+    ports:
+      - "5174:5174"
+    environment:
+      - VITE_BACKEND_URL=http://localhost:4000
+    depends_on:
+      - server
+    networks:
+      - barberq-network
+
+# ------------------------------------------------------------------------------
+# Persistent Volumes & Custom Isolated Bridge Network
+# ------------------------------------------------------------------------------
+volumes:
+  redis_data:
+    driver: local
+
+networks:
+  barberq-network:
+    driver: bridge

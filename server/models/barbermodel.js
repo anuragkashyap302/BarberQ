@@ -17,6 +17,10 @@ const barberSchema = new mongoose.Schema({
     
  },{ minimize: false });
 
+// Database indexing: Barber availability aur rating filters ko superfast karne ke liye indexes
+barberSchema.index({ available: 1 });
+barberSchema.index({ rating: -1 });
+
 const BarberModel = mongoose.models.barber || mongoose.model('barber', barberSchema);
 export default BarberModel;
 

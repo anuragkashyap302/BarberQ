@@ -340,15 +340,17 @@ const bookSlot = async (req, res) => {
     await newBooking.save()
 
     // Realtime notification send kiya socket connection pe: target barber's room update and slot lock state
-    req.io.to(`barber_${barberId}`).emit('slot_update', { slotDate, slotTime, action: 'book' });
+    if (req.io) {
+      req.io.to(`barber_${barberId}`).emit('slot_update', { slotDate, slotTime, action: 'book' });
 
-    // Barber dashboard pe sound play & new booking alert notification trigger karne ke liye message send kiya
-    req.io.to(`barber_${barberId}`).emit('new_booking_alert', {
-      bookingId: newBooking._id,
-      userName: userData.name,
-      slotDate,
-      slotTime
-    });
+      // Barber dashboard pe sound play & new booking alert notification trigger karne ke liye message send kiya
+      req.io.to(`barber_${barberId}`).emit('new_booking_alert', {
+        bookingId: newBooking._id,
+        userName: userData.name,
+        slotDate,
+        slotTime
+      });
+    }
 
     //  Agar paymentMethod Stripe hai, toh checkout session create karke URL return karenge
     if (paymentMethod === "Stripe") {
@@ -396,14 +398,15 @@ const bookSlot = async (req, res) => {
 const listBookings = async (req, res) => {
   try {
     const userId = req.userId;
-    const bookings = await bookingModel.find({ userId }).sort({ date: -1 })
-    res.json({ success: true, bookings })
+    // DB Index ({ userId: 1, date: -1 }) + .lean() use karke query ko ultra-fast banaya
+    const bookings = await bookingModel.find({ userId }).sort({ date: -1 }).lean();
+    res.json({ success: true, bookings });
 
   } catch (error) {
     console.log(error);
-    res.json({ success: false, message: error.message })
+    res.json({ success: false, message: error.message });
   }
-}
+};
 // api to cancel booking
 const cancelBooking = async (req, res) => {
   try {
@@ -424,16 +427,18 @@ const cancelBooking = async (req, res) => {
 
     // Resling/releasing barber slots_booked atomically with MongoDB $pull operator
     const { barberId, slotDate, slotTime } = bookingData;
+    const barberData = bookingData.barberData || (await BarberModel.findById(barberId)) || { name: 'Assigned Barber' };
 
     await BarberModel.findByIdAndUpdate(barberId, {
       $pull: { [`slots_booked.${slotDate}`]: slotTime }
     });
 
     // Realtime slot release push notifications trigger kiya taaki slot dynamic lock release state update ho sabhi clients pe
-    req.io.to(`barber_${barberId}`).emit('slot_update', { slotDate, slotTime, action: 'release' });
-
-    // Live queue tracking data update karne ke liye request push kiya
-    req.io.to(`barber_${barberId}`).emit('queue_update');
+    if (req.io) {
+      req.io.to(`barber_${barberId}`).emit('slot_update', { slotDate, slotTime, action: 'release' });
+      // Live queue tracking data update karne ke liye request push kiya
+      req.io.to(`barber_${barberId}`).emit('queue_update');
+    }
     const mailOptions = {
       from: process.env.SENDER_EMAIL,
       to: userData.email,
@@ -595,7 +600,14 @@ const cancelBooking = async (req, res) => {
 </html>`
     };
 
-    await transporter.sendMail(mailOptions);
+    try {
+      if (userData && userData.email) {
+        await transporter.sendMail(mailOptions);
+      }
+    } catch (mailErr) {
+      console.log('Cancellation email sending warning:', mailErr.message);
+    }
+
     res.json({ success: true, message: "Booking Cancelled Successfully" });
   } catch (error) {
     console.log(error);
@@ -720,7 +732,7 @@ const getQueuePosition = async (req, res) => {
     // Active bookings list sort kiya time scale comparison se
     activeBookings.sort((a, b) => parseTime(a.slotTime) - parseTime(b.slotTime));
 
-    // Booking का current position (index) identify
+    // Booking ka current position (index) identify
     const currentIndex = activeBookings.findIndex(b => b._id.toString() === bookingId);
 
     if (currentIndex === -1) {
