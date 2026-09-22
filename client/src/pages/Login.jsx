@@ -8,7 +8,7 @@ const Login = () => {
 
   const {backendURL , token , setToken} = useContext(AppContext)
   const navigate = useNavigate()
-  const [state, setState] = useState("Sign Up");
+  const [state, setState] = useState("Sign Up"); // "Sign Up" | "Login" | "Forgot Password"
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
@@ -24,7 +24,7 @@ const Login = () => {
           } else{
               toast.error(data.message)
           }
-        }else{
+        } else if(state === 'Login'){
            const {data} = await axios.post(backendURL + '/api/user/login' , {password, email})
           if(data.success){
             localStorage.setItem('token' , data.token)
@@ -32,7 +32,15 @@ const Login = () => {
           } else{
               toast.error(data.message)
           }
-            
+        } else if(state === 'Forgot Password'){
+           const {data} = await axios.post(backendURL + '/api/user/forgot-password', { email, newPassword: password });
+           if(data.success){
+             toast.success(data.message);
+             setState('Login');
+             setPassword('');
+           } else {
+             toast.error(data.message);
+           }
         }
           
      } catch (error) {
@@ -54,13 +62,21 @@ const Login = () => {
       <div className="bg-gray-800 w-full max-w-md p-8 rounded-2xl shadow-xl text-white">
         {/* Title */}
         <h2 className="text-3xl font-bold text-center mb-2">
-          {state === "Sign Up" ? "Create Account" : "Welcome Back"}
+          {state === "Sign Up"
+            ? "Create Account"
+            : state === "Login"
+            ? "Welcome Back"
+            : "Reset Password"}
         </h2>
         <p className="text-gray-400 text-center mb-6">
-          Please {state === "Sign Up" ? "sign up" : "log in"} to book an appointment
+          {state === "Sign Up"
+            ? "Please sign up to book an appointment"
+            : state === "Login"
+            ? "Please log in to book an appointment"
+            : "Enter your registered email and a new password"}
         </p>
 
-        {/* Full Name */}
+        {/* Full Name (Sign Up only) */}
         {state === "Sign Up" && (
           <div className="mb-4">
             <label className="block text-sm font-medium mb-1">Full Name</label>
@@ -88,9 +104,11 @@ const Login = () => {
           />
         </div>
 
-        {/* Password */}
-        <div className="mb-6">
-          <label className="block text-sm font-medium mb-1">Password</label>
+        {/* Password / New Password */}
+        <div className="mb-2">
+          <label className="block text-sm font-medium mb-1">
+            {state === "Forgot Password" ? "New Password" : "Password"}
+          </label>
           <input
             type="password"
             onChange={(e) => setPassword(e.target.value)}
@@ -101,31 +119,72 @@ const Login = () => {
           />
         </div>
 
-        {/* Button */}
+        {/* Forgot Password Link (Login state only) */}
+        {state === "Login" && (
+          <div className="flex justify-end mb-4">
+            <span
+              onClick={() => {
+                setState("Forgot Password");
+                setPassword("");
+              }}
+              className="text-xs text-pink-400 hover:underline cursor-pointer"
+            >
+              Forgot password?
+            </span>
+          </div>
+        )}
+
+        {/* Spacing compensation for states without forgot-password link */}
+        {state !== "Login" && <div className="mb-4" />}
+
+        {/* Submit Button */}
         <button
           type="submit"
           className="w-full py-3 rounded-lg bg-pink-500 hover:bg-pink-600 transition font-semibold text-lg shadow-lg cursor-pointer"
         >
-          {state === "Sign Up" ? "Create Account" : "Login"}
+          {state === "Sign Up"
+            ? "Create Account"
+            : state === "Login"
+            ? "Login"
+            : "Update Password"}
         </button>
 
-        {/* Switch between Login & SignUp */}
-        <p className="text-center text-gray-400 mt-6">
-          {state === "Sign Up"
-            ? "Already have an account?"
-            : "Don’t have an account?"}{" "}
-          <span
-            onClick={() =>
-              setState(state === "Sign Up" ? "Login" : "Sign Up")
-            }
-            className="text-pink-400 hover:underline cursor-pointer"
-          >
-            {state === "Sign Up" ? "Login" : "Sign Up"}
-          </span>
-        </p>
+        {/* Switch links */}
+        <div className="text-center text-gray-400 mt-6 space-y-2">
+          {state === "Forgot Password" ? (
+            <p>
+              Remember your password?{" "}
+              <span
+                onClick={() => {
+                  setState("Login");
+                  setPassword("");
+                }}
+                className="text-pink-400 hover:underline cursor-pointer"
+              >
+                Login
+              </span>
+            </p>
+          ) : (
+            <p>
+              {state === "Sign Up"
+                ? "Already have an account?"
+                : "Don’t have an account?"}{" "}
+              <span
+                onClick={() => {
+                  setState(state === "Sign Up" ? "Login" : "Sign Up");
+                  setPassword("");
+                }}
+                className="text-pink-400 hover:underline cursor-pointer"
+              >
+                {state === "Sign Up" ? "Login" : "Sign Up"}
+              </span>
+            </p>
+          )}
+        </div>
       </div>
     </form>
   );
 };
 
 export default Login;
+

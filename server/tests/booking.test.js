@@ -66,7 +66,7 @@ describe('Booking & Concurrency Race Condition Suite', () => {
     const slotDate = '2026_10_05';
     const slotTime = '10:00 AM';
 
-    // Hindi Comment: User 1 slot booking request bhej raha hai
+    // User 1 slot booking request bhej raha hai
     const res = await request(app)
       .post('/api/user/book-slot')
       .set('token', userToken1)
@@ -114,7 +114,7 @@ describe('Booking & Concurrency Race Condition Suite', () => {
     expect(resUser1.body.success).toBe(true);
 
     // Step 2: User 2 ne usi same date aur same time ka slot book karne ki koshish ki
-    // Hindi Comment: MongoDB atomic update findOneAndUpdate query check karegi aur reject karegi
+    //  MongoDB atomic update findOneAndUpdate query check karegi aur reject karegi
     const resUser2 = await request(app)
       .post('/api/user/book-slot')
       .set('token', userToken2)
@@ -159,7 +159,7 @@ describe('Booking & Concurrency Race Condition Suite', () => {
     const bookingId = booking._id.toString();
 
     // Step 2: Booking cancel request bheji
-    // Hindi Comment: Cancel endpoint slot ko $pull operator se barber document se release karta hai
+    //  Cancel endpoint slot ko $pull operator se barber document se release karta hai
     const cancelRes = await request(app)
       .post('/api/user/cancel-booking')
       .set('token', userToken1)

@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 
 let mongoServer;
 
-// Hindi Comment: Sabhi tests run hone se pehle In-Memory MongoDB server start kiya
+//  Sabhi tests run hone se pehle In-Memory MongoDB server start kiya
 export const setupTestDB = () => {
   beforeAll(async () => {
     // Agar pehle se koi connection open ho toh close karenge
@@ -16,7 +16,7 @@ export const setupTestDB = () => {
     await mongoose.connect(mongoUri);
   });
 
-  // Hindi Comment: Har individual test run ke baad database clean karenge taaki tests isolated rahein
+  //  Har individual test run ke baad database clean karenge taaki tests isolated rahein
   afterEach(async () => {
     const collections = mongoose.connection.collections;
     for (const key in collections) {
@@ -25,7 +25,7 @@ export const setupTestDB = () => {
     }
   });
 
-  // Hindi Comment: Sabhi tests complete hone ke baad connection close aur memory server stop kiya
+  //  Sabhi tests complete hone ke baad connection close aur memory server stop kiya
   afterAll(async () => {
     if (mongoose.connection.readyState !== 0) {
       await mongoose.disconnect();

@@ -43,9 +43,9 @@ describe('Security Headers & Rate Limiting Suite', () => {
     });
 
     it('Auth endpoint pe limit se jyada requests bhejne par HTTP 429 Too Many Requests aana chahiye', async () => {
-      // Hindi Comment: 16 rapid requests bhej kar brute force rate limit trigger kiya
+      // 55 rapid requests bhej kar brute force rate limit trigger kiya
       const requests = [];
-      for (let i = 0; i < 17; i++) {
+      for (let i = 0; i < 55; i++) {
         requests.push(
           request(app)
             .post('/api/user/login')

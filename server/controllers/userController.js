@@ -772,4 +772,36 @@ const getChatHistory = async (req, res) => {
   }
 }
 
-export { registerUser, loginUser, getProfile, updateProfile, bookSlot, listBookings, cancelBooking, paymentStripe, verifyStripe, getQueuePosition, getChatHistory }
+// User ke liye direct password reset (Simple Forgot Password) function
+const forgotPassword = async (req, res) => {
+  try {
+    const { email, newPassword } = req.body;
+    if (!email || !newPassword) {
+      return res.json({ success: false, message: "Email and New Password are required" });
+    }
+    if (!validator.isEmail(email)) {
+      return res.json({ success: false, message: "Please provide a valid email address" });
+    }
+    if (newPassword.length < 6) {
+      return res.json({ success: false, message: "Password must be at least 6 characters long" });
+    }
+
+    const user = await UserModel.findOne({ email });
+    if (!user) {
+      return res.json({ success: false, message: "No account found with this email address" });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+    user.password = hashedPassword;
+    await user.save();
+
+    return res.json({ success: true, message: "Password updated successfully. You can now login with your new password." });
+  } catch (error) {
+    console.log("Error in forgotPassword:", error);
+    res.json({ success: false, message: error.message });
+  }
+};
+
+export { registerUser, loginUser, forgotPassword, getProfile, updateProfile, bookSlot, listBookings, cancelBooking, paymentStripe, verifyStripe, getQueuePosition, getChatHistory }

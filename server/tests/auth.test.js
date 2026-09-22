@@ -155,7 +155,7 @@ describe('User Authentication & Authorization Suite', () => {
     });
 
     it('Valid token ke sath user profile data return hona chahiye', async () => {
-      // Hindi Comment: Valid register karke mila token pass kiya
+      // Valid register karke mila token pass kiya
       const regRes = await request(app).post('/api/user/register').send(mockUser);
       const token = regRes.body.token;
 
@@ -169,6 +169,53 @@ describe('User Authentication & Authorization Suite', () => {
       expect(profileRes.body.userData.email).toBe(mockUser.email);
       // Password return nahi hona chahiye security ke liye
       expect(profileRes.body.userData.password).toBeUndefined();
+    });
+  });
+
+  // ==========================================
+  // 4. Forgot Password Tests
+  // ==========================================
+  describe('POST /api/user/forgot-password', () => {
+    beforeEach(async () => {
+      await request(app).post('/api/user/register').send(mockUser);
+    });
+
+    it('Existing user ka password successfully update hona chahiye aur naye password se login hona chahiye', async () => {
+      const newPassword = 'newSecretPassword123';
+      const res = await request(app)
+        .post('/api/user/forgot-password')
+        .send({
+          email: mockUser.email,
+          newPassword,
+        });
+
+      expect(res.statusCode).toBe(200);
+      expect(res.body.success).toBe(true);
+      expect(res.body.message).toMatch(/updated successfully/i);
+
+      // Verify ki ab user naye password se login kar sakta hai
+      const loginRes = await request(app)
+        .post('/api/user/login')
+        .send({
+          email: mockUser.email,
+          password: newPassword,
+        });
+
+      expect(loginRes.body.success).toBe(true);
+      expect(loginRes.body.token).toBeDefined();
+    });
+
+    it('Non-existent email hone par error message return karna chahiye', async () => {
+      const res = await request(app)
+        .post('/api/user/forgot-password')
+        .send({
+          email: 'unknown@example.com',
+          newPassword: 'newPassword123',
+        });
+
+      expect(res.statusCode).toBe(200);
+      expect(res.body.success).toBe(false);
+      expect(res.body.message).toMatch(/no account found/i);
     });
   });
 });
