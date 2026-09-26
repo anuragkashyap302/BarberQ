@@ -35,7 +35,7 @@ app.use(helmet({
   crossOriginEmbedderPolicy: false,
 }));
 
-// CORS configuration for both local and production URLs
+// CORS configuration for both local, preview, and production URLs
 const allowedOrigins = [
   'http://localhost:5173',      // Client local
   'http://localhost:5174',      // Admin local
@@ -44,8 +44,21 @@ const allowedOrigins = [
   'https://barberq.anuragkr.me' // domain name purchased 
 ];
 
+const corsOriginChecker = (origin, callback) => {
+  // Allow requests with no origin (e.g. mobile apps, curl, server-to-server)
+  if (!origin) return callback(null, true);
+  if (
+    allowedOrigins.includes(origin) ||
+    origin.endsWith('.vercel.app') ||
+    origin.endsWith('.anuragkr.me')
+  ) {
+    return callback(null, true);
+  }
+  return callback(new Error(`CORS blocked for origin: ${origin}`));
+};
+
 app.use(cors({
-  origin: allowedOrigins,
+  origin: corsOriginChecker,
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'token', 'aToken', 'bToken'],
@@ -62,7 +75,11 @@ app.use('/api', generalLimiter);
 // Socket.io instance create kiya CORS allowed properties ke sath
 const io = new Server(server, {
   cors: {
-    origin: allowedOrigins,
+    origin: (origin, callback) => {
+      corsOriginChecker(origin, (err, allow) => {
+        callback(err, allow ? true : false);
+      });
+    },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     credentials: true
   }
