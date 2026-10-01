@@ -19,7 +19,7 @@ describe('User Authentication & Authorization Suite', () => {
   // ==========================================
   describe('POST /api/user/register', () => {
     it('Naye user ko successfully register karna chahiye aur JWT token return karna chahiye', async () => {
-      // Hindi Comment: Valid user payload bhej kar registration test kiya
+      //  Valid user payload bhej kar registration test kiya
       const res = await request(app)
         .post('/api/user/register')
         .send(mockUser);
@@ -35,7 +35,7 @@ describe('User Authentication & Authorization Suite', () => {
     });
 
     it('Missing details hone par validation error return karna chahiye', async () => {
-      // Hindi Comment: Missing name payload test kiya
+      //  Missing name payload test kiya
       const res = await request(app)
         .post('/api/user/register')
         .send({
@@ -49,7 +49,7 @@ describe('User Authentication & Authorization Suite', () => {
     });
 
     it('Invalid email format hone par error return karna chahiye', async () => {
-      // Hindi Comment: Invalid email string test kiya
+      //  Invalid email string test kiya
       const res = await request(app)
         .post('/api/user/register')
         .send({
@@ -64,7 +64,7 @@ describe('User Authentication & Authorization Suite', () => {
     });
 
     it('6 characters se chhota password hone par error return karna chahiye', async () => {
-      // Hindi Comment: Weak password test kiya
+      //  Weak password test kiya
       const res = await request(app)
         .post('/api/user/register')
         .send({
@@ -89,7 +89,7 @@ describe('User Authentication & Authorization Suite', () => {
     });
 
     it('Valid credentials ke sath successfully login hona chahiye', async () => {
-      // Hindi Comment: Correct email aur password ke sath login request kiya
+      // Correct email aur password ke sath login request kiya
       const res = await request(app)
         .post('/api/user/login')
         .send({
@@ -103,7 +103,7 @@ describe('User Authentication & Authorization Suite', () => {
     });
 
     it('Galat password hone par login reject hona chahiye', async () => {
-      // Hindi Comment: Wrong password test kiya
+      // Wrong password test kiya
       const res = await request(app)
         .post('/api/user/login')
         .send({
@@ -117,7 +117,7 @@ describe('User Authentication & Authorization Suite', () => {
     });
 
     it('Non-existent user email ke sath error message aana chahiye', async () => {
-      // Hindi Comment: Aisa email jo DB me nahi hai
+      //  Aisa email jo DB me nahi hai
       const res = await request(app)
         .post('/api/user/login')
         .send({
@@ -136,7 +136,7 @@ describe('User Authentication & Authorization Suite', () => {
   // ==========================================
   describe('Protected Route Guard: GET /api/user/get-profile', () => {
     it('Bina token ke protected route access karne par unauthorized error milna chahiye', async () => {
-      // Hindi Comment: Header me token nahi pass kiya
+      //  Header me token nahi pass kiya
       const res = await request(app).get('/api/user/get-profile');
 
       expect(res.statusCode).toBe(200);
@@ -145,7 +145,7 @@ describe('User Authentication & Authorization Suite', () => {
     });
 
     it('Invalid/Tampered token pass karne par request reject honi chahiye', async () => {
-      // Hindi Comment: Fake ya corrupted token pass kiya
+      //  Fake ya corrupted token pass kiya
       const res = await request(app)
         .get('/api/user/get-profile')
         .set('token', 'invalid_fake_jwt_token_xyz');

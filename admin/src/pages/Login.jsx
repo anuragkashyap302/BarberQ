@@ -46,6 +46,16 @@ const onSubmitHandler = async(e) =>{
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-[#0f172a] via-[#1e1b4b] to-[#2c1b1b] px-4">
       <form onSubmit={onSubmitHandler} className="w-full max-w-md bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl p-8 border border-white/20">
+        {/* Brand Logo Emblem */}
+        <div className="flex flex-col items-center justify-center mb-6">
+          <img
+            src="/logo.png"
+            alt="BarberQ"
+            className="w-16 h-16 rounded-2xl object-cover shadow-[0_0_25px_rgba(236,72,153,0.45)] border border-amber-500/30 hover:scale-105 transition-transform duration-300"
+          />
+          <span className="mt-2 text-xs tracking-widest uppercase font-semibold text-pink-400">BarberQ Management</span>
+        </div>
+
         {/* Title */}
         <p className="text-2xl font-bold text-center text-white mb-6">
           <span className="text-pink-500">{state}</span> Login

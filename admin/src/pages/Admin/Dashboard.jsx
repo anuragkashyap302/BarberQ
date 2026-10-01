@@ -3,6 +3,7 @@ import { AdminContext } from '../../context/AdminContext'
 import { AppContext } from '../../context/AppContext'
 import { Scissors, Calendar, Users, IndianRupee, ClipboardList, XCircle } from 'lucide-react'
 import { barberImages } from '../../assets/assets'
+import { AdminDashboardSkeleton } from '../../components/SkeletonLoaders' // Hindi Comment: Admin dashboard skeleton import kiya
 
 const Dashboard = () => {
   const { aToken, dashData, getDashData, cancelBooking } = useContext(AdminContext)
@@ -112,9 +113,8 @@ const Dashboard = () => {
         </div>
       </div>
     ) : (
-      <div className="p-6 text-white min-h-screen flex items-center justify-center">
-        <p className="text-xl">Loading dashboard...</p>
-      </div>
+      //  Dashboard data aane tak smooth pulsing skeleton UI dikhega
+      <AdminDashboardSkeleton />
     )
   )
 }

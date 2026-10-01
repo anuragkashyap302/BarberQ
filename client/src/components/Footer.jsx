@@ -1,57 +1,197 @@
 import React from "react";
-import { assets } from "../assets/assets"; // make sure your logo is here
-import { PhoneCall , Mail, MapPin } from "lucide-react"
+import { Link } from "react-router-dom";
+import { 
+  PhoneCall, 
+  Mail, 
+  MapPin, 
+  Scissors, 
+  Heart, 
+  Clock, 
+  ArrowRight,
+  ShieldCheck
+} from "lucide-react";
+
+// ==========================================
+// BARBERQ PREMIUM FOOTER COMPONENT
+// ==========================================
+//  Premium glassmorphic footer jisme floating ambient glow,
+// quick navigation links, contact info aur Anurag Kumar ka developer credit diya gaya hai.
 
 const Footer = () => {
   return (
-    <footer className=" text-white py-12 mt-16">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-12">
-        
-        {/* Logo & About */}
-        <div>
-          <div className="flex items-center gap-3">
-            <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 ml-1 text-yellow-300 drop-shadow-[0_0_4px_rgba(255,191,73,0.8)]" fill="currentColor" viewBox="0 0 24 24">
-        <path d="M9.828 14.828a4 4 0 015.656 0l2.828 2.828a4 4 0 11-5.656 5.656l-2.828-2.828a4 4 0 010-5.656zM4 2a1 1 0 000 2h.586l7.707 7.707a5.978 5.978 0 00-.83 1.457L4 5.414V6a1 1 0 102 0V4a1 1 0 00-1-1H4zm17 0a1 1 0 010 2h-.586l-5.707 5.707a5.978 5.978 0 00-.83-1.457L20 5.414V6a1 1 0 102 0V4a1 1 0 00-1-1h.586z"/>
-      </svg>
-            <h2 className="text-2xl font-bold">BarberQ</h2>
+    <footer className="relative bg-gradient-to-b from-slate-950/60 via-slate-950/90 to-black text-white border-t border-pink-500/20 pt-16 pb-8 mt-20 overflow-hidden">
+      {/* Background Ambient Glows */}
+      <div className="absolute top-0 left-1/4 w-80 h-80 bg-pink-500/10 rounded-full blur-3xl pointer-events-none -z-10"></div>
+      <div className="absolute bottom-10 right-1/4 w-80 h-80 bg-purple-600/10 rounded-full blur-3xl pointer-events-none -z-10"></div>
+
+      {/* Floating Accent Icons (Hidden on mobile) */}
+      <div className="absolute top-8 right-12 text-pink-500/15 pointer-events-none hidden md:block animate-float">
+        <Scissors size={48} />
+      </div>
+      <div className="absolute top-24 left-10 text-pink-500/15 pointer-events-none hidden md:block -scale-x-100 animate-float-delayed">
+        <Scissors size={48} />
+      </div>
+
+      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12 pb-12 border-b border-white/10">
+          
+          {/* Col 1: Brand & Bio */}
+          <div className="space-y-4">
+            <Link to="/" onClick={() => window.scrollTo(0, 0)} className="inline-flex items-center gap-3 group">
+              <img
+                src="/logo.png"
+                alt="BarberQ Logo"
+                className="w-11 h-11 rounded-xl object-cover shadow-[0_0_16px_rgba(236,72,153,0.4)] group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 border border-amber-500/30"
+              />
+              <h2 className="text-2xl font-extrabold tracking-tight">
+                Barber<span className="text-pink-500">Q</span>
+              </h2>
+            </Link>
+            <p className="text-gray-400 text-sm leading-relaxed">
+              BarberQ connects you with handpicked master barbers and elite styling studios. Book confirmed time slots in seconds, track queues in real-time, and skip the wait!
+            </p>
+            <div className="flex items-center gap-2 text-xs font-semibold text-pink-400/90 pt-1">
+              <ShieldCheck size={16} className="text-green-400" />
+              Verified Specialists & 100% Guaranteed Slots
+            </div>
           </div>
-          <p className="mt-4 text-gray-300 leading-relaxed">
-            BarberQ is your trusted platform to book grooming appointments with
-            top-rated barbers in your area. Look sharp, feel confident, and skip
-            the wait!
+
+          {/* Col 2: Quick Links */}
+          <div>
+            <h3 className="text-base font-bold text-white uppercase tracking-wider mb-4 border-l-2 border-pink-500 pl-3">
+              Explore
+            </h3>
+            <ul className="space-y-2.5 text-sm text-gray-300">
+              <li>
+                <Link to="/" onClick={() => window.scrollTo(0, 0)} className="flex items-center gap-2 hover:text-pink-400 hover:translate-x-1 transition-all duration-200">
+                  <ArrowRight size={13} className="text-pink-400 opacity-60" /> Home
+                </Link>
+              </li>
+              <li>
+                <Link to="/barbers" onClick={() => window.scrollTo(0, 0)} className="flex items-center gap-2 hover:text-pink-400 hover:translate-x-1 transition-all duration-200">
+                  <ArrowRight size={13} className="text-pink-400 opacity-60" /> All Barbers
+                </Link>
+              </li>
+              <li>
+                <a href="#services" className="flex items-center gap-2 hover:text-pink-400 hover:translate-x-1 transition-all duration-200">
+                  <ArrowRight size={13} className="text-pink-400 opacity-60" /> Our Services
+                </a>
+              </li>
+              <li>
+                <Link to="/about" onClick={() => window.scrollTo(0, 0)} className="flex items-center gap-2 hover:text-pink-400 hover:translate-x-1 transition-all duration-200">
+                  <ArrowRight size={13} className="text-pink-400 opacity-60" /> About BarberQ
+                </Link>
+              </li>
+              <li>
+                <Link to="/contact" onClick={() => window.scrollTo(0, 0)} className="flex items-center gap-2 hover:text-pink-400 hover:translate-x-1 transition-all duration-200">
+                  <ArrowRight size={13} className="text-pink-400 opacity-60" /> Support & Contact
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Col 3: Popular Grooming Services */}
+          <div>
+            <h3 className="text-base font-bold text-white uppercase tracking-wider mb-4 border-l-2 border-pink-500 pl-3">
+              Top Services
+            </h3>
+            <ul className="space-y-2.5 text-sm text-gray-300">
+              <li>
+                <Link to="/barbers/Haircut%20%26%20Styling" className="hover:text-pink-400 transition-colors">
+                  Haircut & Beard Styling
+                </Link>
+              </li>
+              <li>
+                <Link to="/barbers/Beard%20Grooming" className="hover:text-pink-400 transition-colors">
+                  Beard Sculpting & Trim
+                </Link>
+              </li>
+              <li>
+                <Link to="/barbers/Hair%20Spa" className="hover:text-pink-400 transition-colors">
+                  Deep Nourishing Hair Spa
+                </Link>
+              </li>
+              <li>
+                <Link to="/barbers/Facial%20%26%20Spa" className="hover:text-pink-400 transition-colors">
+                  Charcoal Detox Facial
+                </Link>
+              </li>
+              <li>
+                <Link to="/barbers/Kids%20Haircut" className="hover:text-pink-400 transition-colors">
+                  Kids Gentle Haircut
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Col 4: Contact & Hours */}
+          <div className="space-y-3">
+            <h3 className="text-base font-bold text-white uppercase tracking-wider mb-4 border-l-2 border-pink-500 pl-3">
+              Get in Touch
+            </h3>
+            <ul className="space-y-3 text-sm text-gray-300">
+              <li className="flex items-start gap-3">
+                <PhoneCall size={16} className="text-pink-400 mt-0.5 flex-shrink-0" />
+                <a href="tel:+917667033488" className="hover:text-pink-400 transition">
+                  +91 7667033488
+                </a>
+              </li>
+              <li className="flex items-start gap-3">
+                <Mail size={16} className="text-pink-400 mt-0.5 flex-shrink-0" />
+                <a href="mailto:contact@barberq.com" className="hover:text-pink-400 transition truncate">
+                  contact@barberq.com
+                </a>
+              </li>
+              <li className="flex items-start gap-3">
+                <MapPin size={16} className="text-pink-400 mt-0.5 flex-shrink-0" />
+                <span>123 Grooming Street, Barber City, India</span>
+              </li>
+              <li className="flex items-start gap-3 pt-1 text-xs text-gray-400">
+                <Clock size={15} className="text-amber-400 mt-0.5 flex-shrink-0" />
+                <span>Mon – Sun: 10:00 AM – 10:00 PM</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Bottom Bar: Copyright & Developer Credit */}
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs sm:text-sm text-gray-400 text-center sm:text-left">
+          {/* Left: Copyright */}
+          <p>
+            &copy; {new Date().getFullYear()} <span className="text-white font-semibold">BarberQ</span>. All rights reserved.
           </p>
-        </div>
 
-        {/* Company Links */}
-        <div>
-          <h3 className="text-lg font-semibold mb-4">Company</h3>
-          <ul className="space-y-2 text-gray-300">
-            <li><a href="/" className="hover:text-white transition">Home</a></li>
-            <li><a href="/about" className="hover:text-white transition">About Us</a></li>
-            <li><a href="/services" className="hover:text-white transition">Services</a></li>
-            <li><a href="/privacy" className="hover:text-white transition">Privacy Policy</a></li>
-          </ul>
+          {/* Right Corner: Developer Credit for Anurag Kumar */}
+          <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-slate-900/90 border border-pink-500/30 text-gray-300 shadow-[0_0_12px_rgba(236,72,153,0.15)] hover:border-pink-500/60 transition-all group">
+            <span>Developed with</span>
+            <Heart size={14} className="text-red-500 fill-red-500 animate-pulse" />
+            <span>by</span>
+            <span className="font-bold bg-gradient-to-r from-pink-400 via-rose-300 to-amber-300 bg-clip-text text-transparent group-hover:scale-105 transition-transform">
+              Anurag Kumar
+            </span>
+          </div>
         </div>
-
-        {/* Contact Info */}
-        <div>
-          <h3 className="text-lg font-semibold mb-4">Get in Touch</h3>
-          <ul className="space-y-2 text-gray-300">
-            <li><PhoneCall className="inline mr-2 text-green-400" /> 7667033488</li>
-            <li><Mail className="inline mr-2 text-green-400" /> contat@barberq.com</li>
-            <li><MapPin className="inline mr-2 text-green-400" /> 123 Barber Street, Grooming City</li>
-          </ul>
-        </div>
-
       </div>
 
-      {/* Bottom Bar */}
-      <div className="mt-12 border-t border-gray-700 pt-6 text-center text-gray-400 text-sm">
-        &copy; {new Date().getFullYear()} BarberQ. All rights reserved.
-      </div>
+      {/* Scoped CSS for floating animation */}
+      <style>{`
+        @keyframes floatSlow {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-10px); }
+        }
+        @keyframes floatDelayed {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(8px); }
+        }
+        .animate-float {
+          animation: floatSlow 4s ease-in-out infinite;
+        }
+        .animate-float-delayed {
+          animation: floatDelayed 5s ease-in-out infinite;
+        }
+      `}</style>
     </footer>
   );
 };
 
 export default Footer;
-

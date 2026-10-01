@@ -17,3 +17,55 @@
     @apply bg-gradient-to-b from-[#0f172a] via-[#1e1b4b] to-[#2c1b1b] text-white;
   }
 }
+
+/* ============================================================
+   ADMIN SKELETON BREATHING & SHIMMER MOTION ANIMATIONS
+    Admin dashboard aur lists me smooth blinking motion
+   aur glowing shimmer wave lane ke liye animations.
+   ============================================================ */
+@keyframes skeleton-breathe {
+  0%, 100% {
+    opacity: 0.45;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 0.9;
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton-pulse {
+  animation: skeleton-breathe 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  will-change: opacity, transform;
+}
+
+/* Staggered delay for organic card wave in Admin */
+.skeleton-pulse:nth-child(2n) {
+  animation-delay: 0.15s;
+}
+.skeleton-pulse:nth-child(3n) {
+  animation-delay: 0.3s;
+}
+.skeleton-pulse:nth-child(4n) {
+  animation-delay: 0.45s;
+}
+
+.skeleton-bar {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(255, 255, 255, 0.15) 50%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 2.2s infinite linear;
+}

@@ -11,7 +11,7 @@ describe('Security Headers & Rate Limiting Suite', () => {
   // ==========================================
   describe('Helmet HTTP Headers', () => {
     it('Response me Helmet security headers present hone chahiye', async () => {
-      // Hindi Comment: Root endpoint pe Helmet security headers check kiya
+      //  Root endpoint pe Helmet security headers check kiya
       const res = await request(app).get('/');
 
       expect(res.statusCode).toBe(200);
@@ -35,7 +35,7 @@ describe('Security Headers & Rate Limiting Suite', () => {
   // ==========================================
   describe('Rate Limiting Enforcement', () => {
     it('API endpoints pe RateLimit headers return hone chahiye', async () => {
-      // Hindi Comment: Rate limiter headers verify kiya
+      //  Rate limiter headers verify kiya
       const res = await request(app).get('/api/barber/list');
 
       // Draft-6 standard rate limit headers

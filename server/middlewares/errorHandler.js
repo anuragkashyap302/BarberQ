@@ -1,6 +1,6 @@
 import logger from '../config/logger.js';
 
-// Hindi Comment: Centralized Error Handler Middleware jo unhandled exceptions ko safe JSON response me convert karta hai
+// Centralized Error Handler Middleware jo unhandled exceptions ko safe JSON response me convert karta hai
 export const errorHandler = (err, req, res, next) => {
   // Winston logger me complete error details aur stack trace log kiya
   logger.error(`[${req.method}] ${req.originalUrl || req.url} - ${err.message} \nStack: ${err.stack}`);

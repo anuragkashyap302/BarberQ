@@ -2,10 +2,12 @@ import React from 'react'
 import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom'
 import { AppContext } from '../context/AppContext';
+import { TopBarbersGridSkeleton } from './SkeletonLoaders'; // Hindi Comment: Top barbers skeleton placeholder import kiya
 
 const TopBarbers = () => {
     const navigate = useNavigate();
-    const { barbers } = useContext(AppContext);
+    // Hindi Comment: Barbers array, loading flag aur getBarbersData function context se liya
+    const { barbers, isBarbersLoading, getBarbersData } = useContext(AppContext);
 
     // Sort barbers by rating (descending)
     // Yeh function sabhi barbers ko unki rating ke descending order me sort karta hai
@@ -23,7 +25,21 @@ const TopBarbers = () => {
 
       {/* Barbers Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6">
-        {sortedBarbers.slice(0, 10).map((item, index) => (
+        {isBarbersLoading ? (
+          // Hindi Comment: Data aane tak 10 engaging blinking skeleton cards render honge
+          <TopBarbersGridSkeleton count={10} />
+        ) : sortedBarbers.length === 0 ? (
+          <div className="col-span-full text-center py-12 bg-white/5 border border-white/10 rounded-2xl">
+            <p className="text-gray-400 mb-4">No barbers available right now.</p>
+            <button 
+              onClick={getBarbersData} 
+              className="px-6 py-2.5 bg-pink-500 hover:bg-pink-600 text-white rounded-full text-sm font-semibold transition cursor-pointer"
+            >
+              Retry
+            </button>
+          </div>
+        ) : (
+          sortedBarbers.slice(0, 10).map((item, index) => (
           <div onClick={()=>navigate(`/booking/${item._id}`)}
             key={index}
             className="relative group rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer"
@@ -64,7 +80,7 @@ const TopBarbers = () => {
               </div>
             </div>
           </div>
-        ))}
+        )))}
       </div>
 
       {/* More Button */}

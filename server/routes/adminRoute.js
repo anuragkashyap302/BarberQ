@@ -11,7 +11,7 @@ const adminRouter = express.Router();
 
 adminRouter.post('/add-barber',authAdmin , upload.single('image'), addBarber);
 adminRouter.post('/add-service', authAdmin, addService);
-// Hindi Comment: Admin login endpoint pe brute-force prevention ke liye rate limiter lagaya
+//  Admin login endpoint pe brute-force prevention ke liye rate limiter lagaya
 adminRouter.post('/login', authLimiter, loginAdmin);
 adminRouter.post('/all-barbers',authAdmin, allBarbers)
 adminRouter.post('/change-availability', authAdmin, changeAvailability);

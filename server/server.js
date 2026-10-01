@@ -22,7 +22,7 @@ const port = process.env.PORT || 4000;
 // HTTP server ko express app wrap karke banaya hai
 const server = http.createServer(app);
 
-// Hindi Comment: Non-test environment me hi database aur Cloudinary initialize karenge
+//  Non-test environment me hi database aur Cloudinary initialize karenge
 if (process.env.NODE_ENV !== 'test') {
   connectDB();
   connectCloudinary();
@@ -49,6 +49,7 @@ const corsOriginChecker = (origin, callback) => {
   if (!origin) return callback(null, true);
   if (
     allowedOrigins.includes(origin) ||
+    origin.startsWith('http://localhost:') ||
     origin.endsWith('.vercel.app') ||
     origin.endsWith('.anuragkr.me')
   ) {

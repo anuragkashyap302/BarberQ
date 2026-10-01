@@ -5,12 +5,14 @@ import { SocketContext } from "../context/SocketContext"; // Socket context impo
 import { toast } from "react-toastify";
 import axios from "axios";
 import { barberImages } from "../assets/assets";
+import { BookingPageSkeleton } from "../components/SkeletonLoaders"; // Hindi Comment: Booking page skeleton placeholder import kiya
 
 const Booking = () => {
   const { barberId } = useParams();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { barbers, backendURL, token, getBarbersData, userData } =
+  //  Context se isBarbersLoading flag retrieve kiya
+  const { barbers, backendURL, token, getBarbersData, userData, isBarbersLoading } =
     useContext(AppContext);
   const socket = useContext(SocketContext); // Sockets instance call kiya
 
@@ -200,12 +202,17 @@ const Booking = () => {
   return (
     <section className="pt-6 pb-24 px-4 max-w-6xl mx-auto text-white space-y-8 animate-fadeIn">
       {!barber ? (
-        <div className="text-center py-20 bg-white/5 border border-white/10 rounded-3xl">
-          <p className="text-gray-400 text-lg">Barber not found</p>
-          <button onClick={() => navigate("/")} className="mt-4 px-6 py-2 bg-pink-500 rounded-full text-sm font-semibold cursor-pointer">
-            Go Home
-          </button>
-        </div>
+        isBarbersLoading ? (
+          // Hindi Comment: Server se barber data fetch hote samay smooth skeleton UI dikhega
+          <BookingPageSkeleton />
+        ) : (
+          <div className="text-center py-20 bg-white/5 border border-white/10 rounded-3xl">
+            <p className="text-gray-400 text-lg">Barber not found</p>
+            <button onClick={() => navigate("/")} className="mt-4 px-6 py-2 bg-pink-500 rounded-full text-sm font-semibold cursor-pointer">
+              Go Home
+            </button>
+          </div>
+        )
       ) : (
         <>
           {/* Header Bar */}
@@ -562,7 +569,7 @@ const Booking = () => {
                     </div>
                   </div>
 
-                  {/* Hindi Comment: Payment mode select karne ke liye input toggle group (Cash vs Online) */}
+                  {/* Payment mode select karne ke liye input toggle group (Cash vs Online) */}
                   <div className="flex items-center justify-between border-t border-pink-500/10 pt-4 text-sm">
                     <span className="text-gray-400 font-medium">Payment Mode</span>
                     <div className="flex gap-2">

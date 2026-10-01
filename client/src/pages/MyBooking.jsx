@@ -6,10 +6,13 @@ import axios from "axios";
 import { barberImages } from "../assets/assets";
 import QueueTracker from "../components/QueueTracker"; // QueueTracker component import kiya
 import ChatDrawer from "../components/ChatDrawer"; // ChatDrawer component import kiya
+import { MyBookingsGridSkeleton } from "../components/SkeletonLoaders"; // Hindi Comment: Bookings skeleton component import kiya
 
 const MyBooking = () => {
   const { backendURL , token, getBarbersData, userData } = useContext(AppContext);
-  const [bookings, setBookings] = useState([])
+  const [bookings, setBookings] = useState([]);
+  //  Bookings data loading state track karne ke liye state
+  const [isBookingsLoading, setIsBookingsLoading] = useState(true);
   const navigate = useNavigate();
 
   // Chat drawer visibility aur configuration state parameters
@@ -19,6 +22,7 @@ const MyBooking = () => {
   const [chatBarberName, setChatBarberName] = useState("");
   const getUserBookings = async()=>{
     try {
+       setIsBookingsLoading(true);
        const {data} = await axios.get(backendURL + '/api/user/bookings' , {headers:{token}})
         if(data.success){
           setBookings(data.bookings)
@@ -29,6 +33,9 @@ const MyBooking = () => {
       console.log(error);
       toast.error(error.message);
       
+    } finally {
+      // Bookings fetch hone ke baad loading false set kiya
+      setIsBookingsLoading(false);
     }
   }
   const cancelBooking = async(bookingId)=>{
@@ -123,12 +130,20 @@ const MyBooking = () => {
 
       {/* Booking Cards */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {bookings.map((item, index) => (
+        {isBookingsLoading ? (
+          //Server se user bookings fetch hone tak 4 pulsing skeleton cards render honge
+          <MyBookingsGridSkeleton count={4} />
+        ) : bookings.length === 0 ? (
+          <div className="col-span-full text-center py-16 bg-white/5 border border-white/10 rounded-3xl">
+            <p className="text-gray-400 text-base">No bookings yet.</p>
+          </div>
+        ) : (
+          bookings.map((item, index) => (
           <div
             key={index}
             className="flex flex-col bg-slate-900/60 backdrop-blur-md border border-white/10 rounded-3xl overflow-hidden hover:border-pink-500/30 transition-all duration-300 shadow-md hover:shadow-lg hover:shadow-pink-500/5 relative p-6 space-y-4"
           >
-            {/* Header: Circle Avatar & Barber Name / Details */}
+            {/*  Circle Avatar & Barber Name / Details */}
             <div className="flex items-center gap-4 border-b border-white/5 pb-4">
               {/* Circle Avatar with Shadow Glow */}
               <div className="relative flex-shrink-0">
@@ -279,7 +294,7 @@ const MyBooking = () => {
               )}
             </div>
           </div>
-        ))}
+        )))}
       </div>
 
       {/* Dynamic real-time in-app messages drawer display */}

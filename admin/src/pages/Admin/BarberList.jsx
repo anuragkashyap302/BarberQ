@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import { AdminContext } from "../../context/AdminContext";
 import { barberImages } from "../../assets/assets";
+import { AdminBarberListSkeleton } from "../../components/SkeletonLoaders"; // Hindi Comment: Admin barber list skeleton import kiya
 
 const BarberList = () => {
   const { barbers, aToken, getAllBarbers, changeAvailability } = useContext(AdminContext);
@@ -14,8 +15,12 @@ const BarberList = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#0f172a] via-[#1e1b4b] to-[#2c1b1b] text-white p-8">
       <h1 className="text-3xl font-bold text-center mb-8 text-white">Our <span className="text-pink-500">Barbers</span></h1>
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        {barbers.map((item, index) => (
+      {barbers.length === 0 ? (
+        //  Data aane tak 6 pulsing skeleton cards display honge
+        <AdminBarberListSkeleton count={6} />
+      ) : (
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {barbers.map((item, index) => (
           <div
             key={index}
             className="bg-[#1e293b]/70 backdrop-blur-md rounded-2xl shadow-lg p-6 transform hover:scale-105 hover:shadow-2xl transition-all duration-300"
@@ -48,6 +53,7 @@ const BarberList = () => {
           </div>
         ))}
       </div>
+      )}
     </div>
   );
 };

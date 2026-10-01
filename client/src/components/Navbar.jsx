@@ -63,20 +63,17 @@ const Navbar = () => {
           navigate("/");
           scrollTo(0, 0);
         }}
-        className="cursor-pointer"
+        className="cursor-pointer flex items-center gap-2.5 group"
       >
-        <h1 className="text-2xl font-bold tracking-wide flex items-center text-white hover:scale-105 transition-transform duration-300">
+        <img
+          src="/logo.png"
+          alt="BarberQ"
+          className="w-9 h-9 rounded-xl object-cover shadow-[0_0_12px_rgba(236,72,153,0.4)] group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 border border-amber-500/30"
+        />
+        <h1 className="text-2xl font-bold tracking-wide flex items-center text-white group-hover:scale-105 transition-transform duration-300">
           Barber
-          <span className="ml-1 bg-gradient-to-r from-pink-500 to-yellow-400 bg-clip-text text-transparent drop-shadow-lg flex items-center">
+          <span className="ml-0.5 bg-gradient-to-r from-pink-500 to-yellow-400 bg-clip-text text-transparent drop-shadow-lg">
             Q
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="w-5 h-5 ml-1 text-yellow-300 drop-shadow-[0_0_4px_rgba(255,191,73,0.8)]"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path d="M9.828 14.828a4 4 0 015.656 0l2.828 2.828a4 4 0 11-5.656 5.656l-2.828-2.828a4 4 0 010-5.656zM4 2a1 1 0 000 2h.586l7.707 7.707a5.978 5.978 0 00-.83 1.457L4 5.414V6a1 1 0 102 0V4a1 1 0 00-1-1H4zm17 0a1 1 0 010 2h-.586l-5.707 5.707a5.978 5.978 0 00-.83-1.457L20 5.414V6a1 1 0 102 0V4a1 1 0 00-1-1h.586z" />
-            </svg>
           </span>
         </h1>
       </nav>
@@ -245,18 +242,25 @@ const Navbar = () => {
       >
         {/* Header with Logo + Close - Fixed */}
         <div className="flex items-center justify-between w-full px-6 py-4 border-b border-gray-700 bg-black/50 sticky top-0 z-40">
-          <h1
+          <div
             onClick={() => {
               navigate("/");
               setShowMenu(false);
             }}
-            className="text-2xl font-bold tracking-wide flex items-center cursor-pointer text-white"
+            className="flex items-center gap-2.5 cursor-pointer"
           >
-            Barber
-            <span className="ml-1 bg-gradient-to-r from-pink-500 to-yellow-400 bg-clip-text text-transparent flex items-center">
-              Q
-            </span>
-          </h1>
+            <img
+              src="/logo.png"
+              alt="BarberQ"
+              className="w-8 h-8 rounded-xl object-cover shadow-[0_0_10px_rgba(236,72,153,0.4)] border border-amber-500/30"
+            />
+            <h1 className="text-2xl font-bold tracking-wide flex items-center text-white">
+              Barber
+              <span className="ml-0.5 bg-gradient-to-r from-pink-500 to-yellow-400 bg-clip-text text-transparent">
+                Q
+              </span>
+            </h1>
+          </div>
           <img
             onClick={() => setShowMenu(false)}
             src={assets.cross_icon}

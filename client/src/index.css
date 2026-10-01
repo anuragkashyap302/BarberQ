@@ -22,8 +22,57 @@
   @apply block
 }
 
-/* @media (max-width: 640px) {
-  .active p{
-    @apply text-black 
+/* ============================================================
+   SKELETON BREATHING & SHIMMER MOTION ANIMATIONS
+   Card ko gentle up-and-down floating aur breathing
+   blink effect deta hai, saath me smooth shimmering light effect.
+   ============================================================ */
+@keyframes skeleton-breathe {
+  0%, 100% {
+    opacity: 0.45;
+    transform: translateY(0);
   }
- } */
+  50% {
+    opacity: 0.9;
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton-pulse {
+  animation: skeleton-breathe 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  will-change: opacity, transform;
+}
+
+/* Staggered delay for organic wave motion across cards */
+.skeleton-pulse:nth-child(2n) {
+  animation-delay: 0.15s;
+}
+.skeleton-pulse:nth-child(3n) {
+  animation-delay: 0.3s;
+}
+.skeleton-pulse:nth-child(4n) {
+  animation-delay: 0.45s;
+}
+.skeleton-pulse:nth-child(5n) {
+  animation-delay: 0.6s;
+}
+
+.skeleton-bar {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(255, 255, 255, 0.15) 50%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 2.2s infinite linear;
+}

@@ -57,9 +57,9 @@ const Login = () => {
   return (
     <form
       onSubmit={onSubmitHandler}
-      className="min-h-[80vh] flex items-center justify-center bg-gray-900 px-4 mt-20"
+      className="min-h-[85vh] flex items-center justify-center px-4 pt-28 pb-16"
     >
-      <div className="bg-gray-800 w-full max-w-md p-8 rounded-2xl shadow-xl text-white">
+      <div className="bg-slate-900/70 backdrop-blur-xl w-full max-w-md p-8 sm:p-10 rounded-3xl shadow-2xl border border-white/10 text-white">
         {/* Title */}
         <h2 className="text-3xl font-bold text-center mb-2">
           {state === "Sign Up"
@@ -68,7 +68,7 @@ const Login = () => {
             ? "Welcome Back"
             : "Reset Password"}
         </h2>
-        <p className="text-gray-400 text-center mb-6">
+        <p className="text-gray-400 text-center mb-6 text-sm">
           {state === "Sign Up"
             ? "Please sign up to book an appointment"
             : state === "Login"
@@ -85,7 +85,7 @@ const Login = () => {
               onChange={(e) => setName(e.target.value)}
               value={name}
               placeholder="Anurag Kumar"
-              className="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:ring-2 focus:ring-pink-500 focus:outline-none"
+              className="w-full px-4 py-2.5 rounded-xl bg-slate-800/80 border border-white/10 text-white placeholder-gray-400 focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20 focus:outline-none transition"
               required
             />
           </div>
@@ -99,7 +99,7 @@ const Login = () => {
             onChange={(e) => setEmail(e.target.value)}
             value={email}
             placeholder="you@example.com"
-            className="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:ring-2 focus:ring-pink-500 focus:outline-none"
+            className="w-full px-4 py-2.5 rounded-xl bg-slate-800/80 border border-white/10 text-white placeholder-gray-400 focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20 focus:outline-none transition"
             required
           />
         </div>
@@ -114,7 +114,7 @@ const Login = () => {
             onChange={(e) => setPassword(e.target.value)}
             value={password}
             placeholder="••••••••"
-            className="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:ring-2 focus:ring-pink-500 focus:outline-none"
+            className="w-full px-4 py-2.5 rounded-xl bg-slate-800/80 border border-white/10 text-white placeholder-gray-400 focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20 focus:outline-none transition"
             required
           />
         </div>
@@ -140,7 +140,7 @@ const Login = () => {
         {/* Submit Button */}
         <button
           type="submit"
-          className="w-full py-3 rounded-lg bg-pink-500 hover:bg-pink-600 transition font-semibold text-lg shadow-lg cursor-pointer"
+          className="w-full py-3 rounded-xl bg-pink-500 hover:bg-pink-600 transition-all duration-300 font-semibold text-base shadow-lg hover:shadow-pink-500/30 cursor-pointer"
         >
           {state === "Sign Up"
             ? "Create Account"

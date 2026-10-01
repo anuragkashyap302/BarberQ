@@ -21,28 +21,20 @@ const Navbar = () => {
     <nav className="w-full bg-[#0f172a]/60 backdrop-blur-lg border-b border-white/10 px-6 py-3.5 flex items-center justify-between shadow-lg sticky top-0 z-50">
       {/* Logo + Role */}
       <div className="flex items-center gap-3">
-        {/* SVG Icon */}
-        <div className="flex items-center justify-center w-10 h-10 rounded-full bg-pink-500/10 border border-pink-500/20 shadow-md cursor-pointer hover:scale-110 transition-all duration-300" onClick={() => navigate('/')}>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-6 w-6 text-pink-500"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M12 11c0 1.105-.895 2-2 2s-2-.895-2-2 .895-2 2-2 2 .895 2 2zm0 0v7m0-7l3.293-3.293a1 1 0 00-1.414-1.414L12 8.172l-1.879-1.879a1 1 0 00-1.414 1.414L12 11z"
-            />
-          </svg>
+        {/* BarberQ Brand Logo */}
+        <div
+          className="flex items-center gap-2.5 cursor-pointer group"
+          onClick={() => navigate('/')}
+        >
+          <img
+            src="/logo.png"
+            alt="BarberQ"
+            className="w-10 h-10 rounded-xl object-cover shadow-[0_0_15px_rgba(236,72,153,0.4)] border border-amber-500/30 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300"
+          />
+          <h1 className="text-2xl font-bold text-white tracking-wide group-hover:scale-105 transition-transform duration-300">
+            Barber<span className="text-pink-500">Q</span>
+          </h1>
         </div>
-
-        {/* Text Logo */}
-        <h1 className="text-2xl font-bold text-white tracking-wide cursor-pointer hover:scale-110 transition-all duration-300" onClick={ () => navigate('/')}>
-          Barber<span className="text-pink-500">Q</span>
-        </h1>
 
         {/* Role Display */}
         <p className="ml-4 px-3 py-0.5 text-xs rounded-full bg-pink-500/20 text-pink-300 border border-pink-500/30 font-semibold tracking-wide">

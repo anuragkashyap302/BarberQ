@@ -5,6 +5,7 @@ import { SocketContext } from '../../context/SocketContext' // Socket Context im
 import ChatDrawer from '../../components/ChatDrawer' // ChatDrawer component import kiya
 import { assets } from '../../assets/assets'
 import { toast } from 'react-toastify' // toast notifications trigger karne ke liye
+import { TableRowsSkeleton } from '../../components/SkeletonLoaders' // Hindi Comment: Table rows skeleton placeholder import kiya
 
 const BarberBookings = () => {
   const { bToken, bookings, getBookings, completeBooking, cancelBooking, profileData, getProfileData } = useContext(BarberContext)
@@ -91,10 +92,14 @@ const BarberBookings = () => {
       </div>
 
       {/* Bookings List */}
-      <div className="space-y-4 mt-4">
-        {bookings.map((item, index) => (
-          <div
-            key={index}
+      {bookings.length === 0 ? (
+        // Hindi Comment: Barber appointments fetch hone tak table rows skeleton render karega
+        <TableRowsSkeleton rows={6} />
+      ) : (
+        <div className="space-y-4 mt-4">
+          {bookings.map((item, index) => (
+            <div
+              key={index}
             className="bg-white/5 backdrop-blur-md rounded-xl p-4 hover:bg-white/10 transition-all duration-300"
           >
             {/* Desktop Grid */}
@@ -199,6 +204,7 @@ const BarberBookings = () => {
           </div>
         ))}
       </div>
+      )}
 
       {/* Dynamic real-time customer messages chat drawer component */}
       {profileData && (

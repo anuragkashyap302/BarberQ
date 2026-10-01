@@ -3,6 +3,7 @@ import { AdminContext } from '../../context/AdminContext'
 import { AppContext } from '../../context/AppContext'
 import { XCircle } from 'lucide-react'
 import { barberImages } from '../../assets/assets'
+import { TableRowsSkeleton } from '../../components/SkeletonLoaders' // Hindi Comment: Table rows skeleton placeholder import kiya
 
 const AllBooking = () => {
   const { aToken, bookings, getAllBookings,cancelBooking } = useContext(AdminContext)
@@ -32,8 +33,12 @@ const AllBooking = () => {
           </div>
 
           {/* Bookings table ke andar ki rows and columns, yaha  saare bookings ko rows me show kiya hai */}
-          <div className="mt-3 space-y-3">
-            {bookings.map((booking, index) => (
+          {bookings.length === 0 ? (
+            // Bookings load hone tak table rows skeleton dikhega
+            <TableRowsSkeleton rows={6} />
+          ) : (
+            <div className="mt-3 space-y-3">
+              {bookings.map((booking, index) => (
               <div
                 key={index}
                 className="grid grid-cols-7 gap-4 items-center bg-white/5 hover:bg-white/10 transition-all rounded-lg px-4 py-3 text-sm"
@@ -93,6 +98,7 @@ const AllBooking = () => {
               </div>
             ))}
           </div>
+          )}
         </div>
       </div>
     </div>

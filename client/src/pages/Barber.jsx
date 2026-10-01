@@ -2,12 +2,14 @@
 import React, { useContext, useState, useEffect } from "react";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
+import { BarberCardsGridSkeleton, SidebarCategoriesSkeleton } from "../components/SkeletonLoaders"; // Hindi Comment: Skeleton loaders import kiye
 
 const Barber = () => {
   const { speciality } = useParams();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { barbers, services } = useContext(AppContext);
+  // Hindi Comment: Barbers aur services array ke saath loading flags context se prapt kiye
+  const { barbers, services, isBarbersLoading, isServicesLoading } = useContext(AppContext);
 
   // Dynamic side category listing
   const mainCategories = ["All", ...(services || []).map(s => s.name)];
@@ -55,24 +57,32 @@ const Barber = () => {
           <h3 className="text-lg font-semibold text-gray-200 mb-3">
             Browse Speciality
           </h3>
-          {mainCategories.map((cat, idx) => (
-            <button
-              key={idx}
-              onClick={() => handleCategoryClick(cat)}
-              className={`block w-full text-left px-4 py-2 rounded-md border ${
-                selectedSpeciality === cat
-                  ? "bg-pink-500 text-white border-pink-500"
-                  : "bg-gray-800 border-gray-700 text-gray-300 hover:bg-gray-700"
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
+          {isServicesLoading ? (
+            // Hindi Comment: Categories load hone tak sidebar skeleton dikhega
+            <SidebarCategoriesSkeleton count={6} />
+          ) : (
+            mainCategories.map((cat, idx) => (
+              <button
+                key={idx}
+                onClick={() => handleCategoryClick(cat)}
+                className={`block w-full text-left px-4 py-2 rounded-md border ${
+                  selectedSpeciality === cat
+                    ? "bg-pink-500 text-white border-pink-500"
+                    : "bg-gray-800 border-gray-700 text-gray-300 hover:bg-gray-700"
+                }`}
+              >
+                {cat}
+              </button>
+            ))
+          )}
         </div>
 
         {/* Barber Cards */}
         <div className="md:col-span-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredBarbers.length === 0 ? (
+          {isBarbersLoading ? (
+            // Hindi Comment: Barbers list fetch hone tak 6 pulsing skeleton cards display honge
+            <BarberCardsGridSkeleton count={6} />
+          ) : filteredBarbers.length === 0 ? (
             <p className="col-span-full text-center text-gray-400">
               No barbers found.
             </p>

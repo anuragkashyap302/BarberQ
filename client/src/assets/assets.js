@@ -1,15 +1,11 @@
 import appointment_img from './appointment_img.webp'
 import profile_pic from './profile_pic.png'
-import contact_image from './contact_image.png'
-import about_image from './about_image.png'
 import logo from './logo.svg'
+import logo_png from './logo.png'
 import dropdown_icon from './dropdown_icon.svg'
 import menu_icon from './menu_icon.svg'
 import cross_icon from './cross_icon.png'
-import chats_icon from './chats_icon.svg'
-import verified_icon from './verified_icon.svg'
 import arrow_icon from './arrow_icon.svg'
-import info_icon from './info_icon.svg'
 import upload_icon from './upload_icon.png'
 import stripe_logo from './stripe_logo.png'
 import razorpay_logo from './razorpay_logo.png'
@@ -30,13 +26,9 @@ import barber12 from './barber12.webp'
 export const assets = {
     appointment_img,
     logo,
-    chats_icon,
-    verified_icon,
-    info_icon,
+    logo_png,
     profile_pic,
     arrow_icon,
-    contact_image,
-    about_image,
     menu_icon,
     cross_icon,
     dropdown_icon,

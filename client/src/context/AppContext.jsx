@@ -11,11 +11,15 @@ const AppContextProvider = (props)=>{
 const backendURL = import.meta.env.VITE_BACKEND_URL;
 const [barbers , setBarbers] = useState([]);
 const [services, setServices] = useState([]);
+// Hindi Comment: Server se barbers aur services data load hone ka status track karne ke liye loading states
+const [isBarbersLoading, setIsBarbersLoading] = useState(true);
+const [isServicesLoading, setIsServicesLoading] = useState(true);
 const [token , setToken] = useState(localStorage.getItem('token')? localStorage.getItem('token'): false)
 const [userData , setUserData] = useState(false)
    
   const getBarbersData = async ()=>{
    try {
+      setIsBarbersLoading(true);
       const {data} = await axios.get(backendURL+"/api/barber/list");
       if(data.success){
         // Map backend string keys (barber1, barber2, etc.) to local React imports
@@ -32,12 +36,16 @@ const [userData , setUserData] = useState(false)
    } catch (error) {
         console.log("Error while fetching barbers data", error);
         toast.error(error.message);
+   } finally {
+        // Hindi Comment: Request complete hone par loading false set kiya
+        setIsBarbersLoading(false);
    }
   }
 
   // Yeh function database se saare available services ko fetch karta hai
   const getServicesData = async () => {
     try {
+      setIsServicesLoading(true);
       const { data } = await axios.get(backendURL + "/api/barber/services");
       if (data.success) {
         setServices(data.services);
@@ -47,6 +55,9 @@ const [userData , setUserData] = useState(false)
     } catch (error) {
       console.log("Error while fetching services data", error);
       toast.error(error.message);
+    } finally {
+      // Hindi Comment: Services fetch hone ke baad loading false kiya
+      setIsServicesLoading(false);
     }
   }
 
@@ -67,7 +78,7 @@ const [userData , setUserData] = useState(false)
     }
   }
     const value = {
-    barbers,getBarbersData ,services,getServicesData,token ,setToken,backendURL, userData,setUserData, userProfileData
+    barbers,getBarbersData,isBarbersLoading ,services,getServicesData,isServicesLoading,token ,setToken,backendURL, userData,setUserData, userProfileData
 }
     useEffect(()=>{
         getBarbersData();

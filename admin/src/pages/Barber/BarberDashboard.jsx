@@ -2,6 +2,7 @@ import React, { useContext, useEffect } from 'react'
 import { BarberContext } from '../../context/BarberContext'
 import { AppContext } from '../../context/AppContext'
 import { IndianRupee, Calendar, Users, ClipboardList, X, Check } from 'lucide-react'
+import { BarberDashboardSkeleton } from '../../components/SkeletonLoaders' // Hindi Comment: Barber dashboard skeleton import kiya
 
 const BarberDashboard = () => {
   const { slotDateFormat } = useContext(AppContext)
@@ -112,9 +113,8 @@ const BarberDashboard = () => {
         </div>
       </div>
     ) : (
-      <div className="p-6 min-h-screen bg-gradient-to-b from-[#0f172a] via-[#1e1b4b] to-[#2c1b1b] text-white flex items-center justify-center">
-        <p className="text-xl">Loading dashboard...</p>
-      </div>
+      // Hindi Comment: Dashboard data aane tak smooth pulsing skeleton placeholder dikhega
+      <BarberDashboardSkeleton />
     )
   )
 }

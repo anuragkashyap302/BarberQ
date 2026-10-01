@@ -11,7 +11,7 @@ barberRouter.get('/list', cacheMiddleware(1800, 'barbers_list'), barberlist);
 // Services list ko 1 hour  ke liye Redis me cache kiya
 barberRouter.get('/services', cacheMiddleware(3600, 'services_list'), getServices);
 
-// Hindi Comment: Barber login endpoint pe password guessing rokne ke liye rate limiter lagaya
+// Barber login endpoint pe password guessing rokne ke liye rate limiter lagaya
 barberRouter.post('/login', authLimiter, barberLogin);
 barberRouter.get('/bookings', authBarber, getBarberBookings);
 barberRouter.post('/complete-booking', authBarber, CompleteBooking);
